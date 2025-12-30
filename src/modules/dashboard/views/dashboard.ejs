@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <title>Dashboard — <%= config.website?.name %></title>
+
+  <%- include(coreView("partials/header/head")) %>
+
+  <% const website = config.website || {}; %>
+  <% const websiteColor = website.color || "#5865f2"; %>
+  <% const websiteLogo = website.logoUrl || null; %>
+
+  <% if (websiteLogo) { %>
+    <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+    <meta property="og:image" content="<%= websiteLogo %>">
+    <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+</head>
+
+<body class="relative min-h-screen bg-gray-950 text-gray-100 overflow-hidden">
+
+  <!-- Navbar core -->
+
+  <!-- Background glow -->
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-52 left-1/2 -translate-x-1/2 w-[1100px] h-[560px] blur-[150px] opacity-35"
+      style="background: radial-gradient(circle at center, <%= websiteColor %>55 0%, transparent 65%);">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-gray-950/30 to-gray-950"></div>
+  </div>
+
+  <main class="relative mx-auto w-[min(1200px,92vw)] pt-10 pb-14">
+    <!-- Header -->
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div class="max-w-2xl">
+        <p class="text-sm text-gray-400">Espace membre</p>
+        <h1 class="mt-1 text-3xl md:text-4xl font-extrabold tracking-tight">
+          Dashboard
+        </h1>
+        <p class="mt-3 text-gray-300 leading-relaxed">
+          Ici tu retrouves les infos de ton compte Discord et l’état de liaison avec ton compte FiveM.
+        </p>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="flex flex-wrap gap-3">
+        <% if (user?.linked) { %>
+          <form method="POST" action="/unlink" class="inline">
+            <button type="submit"
+              class="rounded-xl px-4 py-2.5 font-semibold border border-white/10 bg-white/5 hover:bg-white/10 transition"
+              onclick="return confirm('Délier ton compte FiveM ?');">
+              Délier
+            </button>
+          </form>
+        <% } else { %>
+          <a href="/link"
+            class="rounded-xl px-4 py-2.5 font-semibold text-white transition"
+            style="background-color:<%= websiteColor %>; box-shadow:0 10px 24px <%= websiteColor %>40;">
+            Lier mon compte
+          </a>
+        <% } %>
+
+        <a href="/logout"
+          class="rounded-xl px-4 py-2.5 font-semibold border border-white/10 bg-white/5 hover:bg-white/10 transition">
+          Déconnexion
+        </a>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Profile card -->
+      <section class="lg:col-span-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <% const avatarUrl =
+              user?.avatar
+                ? (user.avatar.startsWith("http") ? user.avatar : `https://cdn.discordapp.com/avatars/${user.discord_id}/${user.avatar}.png?size=128`)
+                : null;
+            %>
+
+            <div class="h-14 w-14 rounded-2xl border border-white/10 bg-black/30 overflow-hidden grid place-items-center"
+                 style="box-shadow:0 10px 24px rgba(0,0,0,.35);">
+              <% if (avatarUrl) { %>
+                <img src="<%= avatarUrl %>" alt="Avatar" class="h-full w-full object-cover" />
+              <% } else { %>
+                <span class="text-xl font-black" style="color:<%= websiteColor %>;">
+                  <%= (config.website?.name || "W").charAt(0).toUpperCase() %>
+                </span>
+              <% } %>
+            </div>
+
+            <span class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-gray-950"
+              style="background-color:<%= websiteColor %>;"></span>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-sm text-gray-400">Connecté via Discord</p>
+            <p class="truncate text-lg font-bold">
+              <%= user?.username || "Utilisateur" %>
+            </p>
+            <p class="truncate text-xs text-gray-500">
+              Discord ID: <span class="text-gray-300"><%= user?.discord_id || "—" %></span>
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-3 text-sm">
+          <div class="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+            <span class="text-gray-400">Statut liaison</span>
+            <% if (user?.linked) { %>
+              <span class="font-semibold" style="color:<%= websiteColor %>;">Lié</span>
+            <% } else { %>
+              <span class="font-semibold text-yellow-300">Non lié</span>
+            <% } %>
+          </div>
+
+          <div class="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+            <span class="text-gray-400">Accès dashboard</span>
+            <span class="font-semibold text-green-300">OK</span>
+          </div>
+        </div>
+
+        <% if (!user?.linked) { %>
+          <div class="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+            <p class="text-sm text-gray-300">
+              Ton compte n’est pas encore lié à FiveM.
+            </p>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">
+              En prod, utilise un code de liaison généré en jeu pour éviter la saisie manuelle.
+            </p>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- Main content -->
+      <section class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Card 1 -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
+          <h2 class="text-lg font-bold">Compte FiveM</h2>
+          <p class="mt-2 text-sm text-gray-400 leading-relaxed">
+            Tu peux gérer ici la liaison avec ton compte in-game, sans toucher à <code class="px-1 bg-white/5 border border-white/10 rounded">users.identifier</code>.
+          </p>
+
+          <div class="mt-5 flex items-center gap-3">
+            <% if (user?.linked) { %>
+              <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm border border-white/10 bg-black/20">
+                <span class="h-2 w-2 rounded-full" style="background-color:<%= websiteColor %>;"></span>
+                Liaison active
+              </span>
+              <a href="/link" class="text-sm underline decoration-white/20 hover:decoration-white/40">
+                Modifier
+              </a>
+            <% } else { %>
+              <a href="/link"
+                class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 font-semibold text-white transition"
+                style="background-color:<%= websiteColor %>; box-shadow:0 10px 24px <%= websiteColor %>40;">
+                Lier maintenant
+              </a>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
+          <h2 class="text-lg font-bold">Sécurité</h2>
+          <p class="mt-2 text-sm text-gray-400 leading-relaxed">
+            Sessions HTTPOnly, OAuth Discord, et stockage minimal.
+          </p>
+
+          <ul class="mt-4 space-y-2 text-sm text-gray-300">
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full" style="background-color:<%= websiteColor %>;"></span>
+              OAuth Discord (identify)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full" style="background-color:<%= websiteColor %>;"></span>
+              Cookie session HTTPOnly
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full" style="background-color:<%= websiteColor %>;"></span>
+              Aucune modification des données in-game
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="md:col-span-2 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
+          <h2 class="text-lg font-bold">Infos techniques</h2>
+          <p class="mt-2 text-sm text-gray-400">
+            Pour ton template public, tu peux mettre ici des modules installés, versions, etc.
+          </p>
+
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+            <div class="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+              <p class="text-gray-400">Environnement</p>
+              <p class="mt-1 font-semibold text-gray-200"><%= process.env.NODE_ENV || "development" %></p>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+              <p class="text-gray-400">Website</p>
+              <p class="mt-1 font-semibold text-gray-200"><%= config.website?.name || "—" %></p>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+              <p class="text-gray-400">Couleur</p>
+              <p class="mt-1 font-semibold" style="color:<%= websiteColor %>;"><%= websiteColor %></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer core -->
+
+
+</body>
+</html>

@@ -7,7 +7,7 @@ module.exports = (ctx) => {
 
   router.get("/", (req, res) => {
     const website = ctx.config.website || {};
-
+    
     res.render("login", {
       config: ctx.config,
       user: req.user || null,
@@ -34,7 +34,7 @@ module.exports = (ctx) => {
 
       const linked = await findLinkedUserByDiscordId(req.user?.discord_id);
       if (!linked) return res.redirect("/link");
-      return res.redirect("/dashboard");
+      return res.redirect("/");
     }
   );
 

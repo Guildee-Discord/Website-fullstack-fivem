@@ -1,16 +1,16 @@
 {
   "name": "website-fivem-discord-ejs",
-  "author": "yusu_sauvage",
+  "author": "yusu",
   "repository": {
     "url": "https://github.com/Guildee-Discord/Website-fullstack-fivem"
   },
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": true,
   "type": "commonjs",
-  "main": "server.js",
+  "main": "server.packed.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node server.packed.js",
+    "dev": "node --watch server.packed.js"
   },
   "dependencies": {
     "discord.js": "^14.25.1",
