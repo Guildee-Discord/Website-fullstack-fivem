@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://i.postimg.cc/vHxQS2Tn/Guildee-et-10-pages-de-plus-Personnel-Microsoft-Edge-30-12-2025-17-20-08.png" width="140" alt="Guildee logo"/>
+  <img src="https://i.postimg.cc/vHxQS2Tn/website.png" width="720" alt="Présentation du site Guildee"/>
 </p>
 
 ---
