@@ -1,0 +1,17 @@
+{
+    "discord": {
+        "token": "MTQwNDkwODM2Nzg4OTE3NDY2MA.GOqpOq.txJbsmqndMISgYbrhuHH1bSXzOUolZfSd87AzQ",
+        "clientID": "1404908367889174660",
+        "clientSecret": "aY6eLmUE7Kn_L5G8Hw2FiM2yIkIzd8lJ",
+        "callbackURL": "http://localhost:3000/auth/discord/callback",
+        "enabled": true,
+        "status": "online",
+        "activity": {
+            "type": "PLAYING",
+            "name": "Website FiveM"
+        },
+        "scope": [
+            "identify"
+        ]
+    }
+}

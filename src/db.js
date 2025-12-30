@@ -2,19 +2,21 @@ const mysql = require("mysql2/promise");
 
 let pool;
 
-function initDb(config) {
-  // Technique "URL string" : mysql://user:pass@host:port/db
+async function initDb(config) {
   pool = mysql.createPool(config.mysqlUrl);
 
-  // Test léger au démarrage (sans faire planter si la DB répond lentement)
-  pool.getConnection()
-    .then(conn => conn.ping().finally(() => conn.release()))
-    .then(() => console.log("✅ MySQL connecté"))
-    .catch(err => console.error("⚠️ MySQL non joignable au démarrage:", err.message));
+  try {
+    const conn = await pool.getConnection();
+    await conn.ping();
+    conn.release();
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
 }
 
 function getDb() {
-  if (!pool) throw new Error("DB non initialisée (initDb manquant)");
+  if (!pool) throw new Error("DB non initialisée");
   return pool;
 }
 

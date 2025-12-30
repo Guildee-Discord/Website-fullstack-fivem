@@ -1,0 +1,10 @@
+{
+    "website": {
+        "name": "Guildee",
+        "color": "#2596be",
+        "logoUrl": "https://i.postimg.cc/vBNj3TbR/logo.png",
+        "require": {
+            "tos": false
+        }
+    }
+}

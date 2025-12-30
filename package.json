@@ -1,6 +1,10 @@
 {
-  "name": "discord-express-mysql",
-  "version": "1.0.0",
+  "name": "website-fivem-discord-ejs",
+  "author": "yusu_sauvage",
+  "repository": {
+    "url": "https://github.com/Guildee-Discord/Website-fullstack-fivem"
+  },
+  "version": "1.0.1",
   "private": true,
   "type": "commonjs",
   "main": "server.js",
@@ -9,6 +13,8 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
+    "discord.js": "^14.25.1",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.17.3",
     "mysql2": "^3.11.4",

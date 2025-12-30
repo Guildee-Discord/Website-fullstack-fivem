@@ -3,12 +3,16 @@
   "baseUrl": "http://localhost:3000",
   "sessionSecret": "change-moi-avec-une-longue-phrase",
   "discord": {
-    "clientID": "1404908367889174660",
+    "clientID": "TON_CLIENT_ID",
     "clientSecret": "TON_CLIENT_SECRET",
     "callbackURL": "http://localhost:3000/auth/discord/callback",
     "scope": [
       "identify"
     ]
   },
-  "mysqlUrl": "mysql://u4386_li5qm0F25g:MByONGl+zq.BZRv=gzSJGDKS@db-wh01.winheberg.fr:3306/s4386_Grimwood?waitForConnections=true&charset=utf8mb4"
+  "mysqlUrl": "mysql://USER:PASSWORD@HOST:3306/NOM_DB",
+  "website": {
+    "name": "Guildee",
+    "logoUrl": "https://postimages.org/"
+  }
 }

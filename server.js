@@ -1,39 +1,63 @@
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const path = require("path");
+const pkg = require("./package.json");
 
+const { printBox } = require("./src/function/printBox");
 const { loadConfig } = require("./src/config");
 const { initDb } = require("./src/db");
-const { configureDiscordAuth } = require("./src/auth/discord");
-const indexRoutes = require("./src/routes");
+const { initDiscordClient } = require("./src/discord/client");
 
-const app = express();
-const config = loadConfig();
+const { createApp } = require("./src/core/app");
+const { loadModules } = require("./src/core/module-loader");
+const { createContainer } = require("./src/core/container");
 
-// DB (pool global)
-initDb(config);
+(async () => {
+  const config = loadConfig();
+  const ctx = createContainer(config);
 
-// Sessions
-app.use(session({
-  secret: config.sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7
-  }
-}));
+  const dbStatus = await initDb(config);
+  const discordStatus = await initDiscordClient(config);
 
-app.use(passport.initialize());
-app.use(passport.session());
+  const app = createApp(ctx);
+  await loadModules(ctx);
 
-configureDiscordAuth(passport, config);
+  app.listen(config.port, () => {
+    const cyan = "\x1b[36m";
+    const yellow = "\x1b[33m";
+    const green = "\x1b[32m";
+    const red = "\x1b[31m";
+    const gray = "\x1b[90m";
+    const reset = "\x1b[0m";
 
-app.use("/public", express.static(path.join(__dirname, "public")));
+    const name = config.website?.name || pkg.name || "Website";
+    const version = pkg.version || "0.0.0";
+    const author = (pkg.author && (pkg.author.name || pkg.author)) || "Unknown";
+    const repo =
+      (pkg.repository &&
+        (typeof pkg.repository === "string"
+          ? pkg.repository
+          : pkg.repository.url)) ||
+      "https://github.com/your/repo";
 
-app.use("/", indexRoutes);
+    const dbLine = dbStatus.ok
+      ? `${green}MySQL connecté${reset}`
+      : `${red}MySQL erreur : ${dbStatus.error}${reset}`;
 
-app.listen(config.port, () => {
-  console.log(`✅ Serveur: ${config.baseUrl} (port ${config.port})`);
-});
+    const discordLine = !discordStatus.enabled
+      ? `${gray}désactivé${reset}`
+      : discordStatus.ok
+        ? `${green}connecté${reset}`
+        : `${red}erreur : ${discordStatus.error}${reset}`;
+
+    printBox(
+      [
+        `${yellow}${name}${reset}  ${cyan}v${version}${reset}`,
+        `URL    : ${cyan}${config.baseUrl}${reset}`,
+        `Port   : ${cyan}${config.port}${reset}`,
+        `DB     : ${dbLine}`,
+        `Discord: ${discordLine}`,
+        `Auteur : ${cyan}${author}${reset}`,
+        `GitHub : ${cyan}${repo}${reset}`,
+      ],
+      cyan
+    );
+  });
+})();

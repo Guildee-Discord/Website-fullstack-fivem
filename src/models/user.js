@@ -1,36 +1,144 @@
 const { getDb } = require("../db");
 
-async function upsertUserByDiscordProfile(profile) {
+/**
+ * IMPORTANT:
+ * - users.identifier = in-game uniquement (FiveM).
+ * - Le site web s'identifie par discord_id.
+ * - On NE renvoie PAS id / identifier au front.
+ *
+ * Pré-requis (dans users):
+ * - discord_id VARCHAR(32) NULL
+ * - discord_username VARCHAR(100) NULL
+ * - discord_avatar VARCHAR(100) NULL
+ */
+
+function toPublicUser(row) {
+  if (!row) return null;
+  return {
+    discord_id: row.discord_id,
+    username: row.discord_username, // on expose "username" côté front
+    avatar: row.discord_avatar,
+    linked: true,
+  };
+}
+
+async function upsertDiscordProfile(discordProfile) {
   const db = getDb();
-  const discordId = profile.id;
-  const username = profile.username || profile.global_name || "unknown";
-  const avatar = profile.avatar || null;
 
-  // Upsert
-  const [result] = await db.execute(
-    `INSERT INTO users (discord_id, username, avatar)
-     VALUES (?, ?, ?)
-     ON DUPLICATE KEY UPDATE
-       username = VALUES(username),
-       avatar = VALUES(avatar)`,
-    [discordId, username, avatar]
-  );
+  const discordId = String(discordProfile.id);
+  const username =
+    discordProfile.username ||
+    discordProfile.global_name ||
+    (discordProfile.user && (discordProfile.user.username || discordProfile.user.global_name)) ||
+    "unknown";
 
-  // Récupère l'entrée
+  const avatar =
+    discordProfile.avatar ||
+    (discordProfile.user && discordProfile.user.avatar) ||
+    null;
+
+  // On vérifie si ce discord_id est déjà lié à un joueur (dans users)
   const [rows] = await db.execute(
-    "SELECT id, discord_id, username, avatar, created_at, updated_at FROM users WHERE discord_id = ? LIMIT 1",
+    `SELECT discord_id, discord_username, discord_avatar
+     FROM users
+     WHERE discord_id = ?
+     LIMIT 1`,
     [discordId]
   );
-  return rows[0] || null;
+
+  if (rows.length) {
+    // Optionnel: garder username/avatar à jour
+    await db.execute(
+      `UPDATE users
+       SET discord_username = ?, discord_avatar = ?
+       WHERE discord_id = ?
+       LIMIT 1`,
+      [username, avatar, discordId]
+    );
+
+    return {
+      discord_id: discordId,
+      username,
+      avatar,
+      linked: true,
+    };
+  }
+
+  // Pas lié → on renvoie le profil discord (sans écrire en DB)
+  return {
+    discord_id: discordId,
+    username,
+    avatar,
+    linked: false,
+  };
 }
 
-async function findUserById(id) {
+/**
+ * Lie un compte Discord à un joueur existant via son identifier FiveM.
+ * -> UPDATE sur users, on ne touche pas à users.identifier (on l'utilise juste en WHERE).
+ */
+async function linkDiscordToIdentifier(discordId, identifier, username, avatar) {
   const db = getDb();
-  const [rows] = await db.execute(
-    "SELECT id, discord_id, username, avatar, created_at, updated_at FROM users WHERE id = ? LIMIT 1",
-    [id]
+
+  const dId = String(discordId);
+  const ident = String(identifier);
+  const uname = String(username);
+  const av = avatar ?? null;
+
+  // Vérifie que l'identifier existe
+  const [exists] = await db.execute(
+    `SELECT 1 FROM users WHERE identifier = ? LIMIT 1`,
+    [ident]
   );
-  return rows[0] || null;
+  if (!exists.length) {
+    return { ok: false, error: "identifier_not_found" };
+  }
+
+  // Empêche de lier un discord déjà lié à quelqu'un d'autre
+  const [already] = await db.execute(
+    `SELECT 1 FROM users WHERE discord_id = ? LIMIT 1`,
+    [dId]
+  );
+  if (already.length) {
+    return { ok: false, error: "discord_already_linked" };
+  }
+
+  // Link
+  await db.execute(
+    `UPDATE users
+     SET discord_id = ?, discord_username = ?, discord_avatar = ?
+     WHERE identifier = ?
+     LIMIT 1`,
+    [dId, uname, av, ident]
+  );
+
+  return {
+    ok: true,
+    user: {
+      discord_id: dId,
+      username: uname,
+      avatar: av,
+      linked: true,
+    },
+  };
 }
 
-module.exports = { upsertUserByDiscordProfile, findUserById };
+async function findLinkedUserByDiscordId(discordId) {
+  const db = getDb();
+
+  const [rows] = await db.execute(
+    `SELECT discord_id, discord_username, discord_avatar
+     FROM users
+     WHERE discord_id = ?
+     LIMIT 1`,
+    [String(discordId)]
+  );
+
+  return toPublicUser(rows[0]);
+}
+
+module.exports = {
+  upsertDiscordProfile,
+  linkDiscordToIdentifier,
+  findLinkedUserByDiscordId,
+};

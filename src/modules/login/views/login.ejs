@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <title>Connexion — <%= config.website.name %></title>
+
+  <%- include(coreView("partials/header/head")) %>
+
+  <% if (websiteLogo) { %>
+    <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+    <meta property="og:image" content="<%= websiteLogo %>">
+    <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+</head>
+
+<body class="relative min-h-screen bg-gray-950 text-gray-100 overflow-hidden">
+
+  <!-- BACKGROUND GRADIENT -->
+  <div class="pointer-events-none absolute inset-0">
+    <div
+      class="absolute -top-48 left-1/2 -translate-x-1/2 w-[900px] h-[500px] blur-[140px] opacity-40"
+      style="background: radial-gradient(circle at center, <%= websiteColor %>55 0%, transparent 65%);">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-gray-950/40 to-gray-950"></div>
+  </div>
+
+  <main class="relative flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-md">
+      <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 sm:p-8 shadow-2xl">
+
+        <div class="text-center">
+          <div
+            class="mx-auto grid h-14 w-14 place-items-center rounded-xl border"
+            style="background-color:<%= websiteColor %>22;border-color:<%= websiteColor %>55;">
+            <span class="text-2xl font-black" style="color:<%= websiteColor %>;">
+              <%= websiteInitial %>
+            </span>
+          </div>
+
+          <h1 class="mt-4 text-2xl font-bold">Connexion</h1>
+          <p class="mt-2 text-sm text-gray-400">
+            Connecte-toi avec Discord pour accéder à ton dashboard FiveM.
+          </p>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="mt-6">
+          <a id="loginBtn"
+             href="<%= requireTos ? '#' : '/login' %>"
+             class="flex items-center justify-center gap-3 rounded-xl px-4 py-2.5 font-semibold text-white transition <%= requireTos ? 'opacity-50 cursor-not-allowed' : '' %>"
+             style="background-color:<%= websiteColor %>;box-shadow:0 10px 24px <%= websiteColor %>55;">
+            <i class="fa-brands fa-discord text-lg"></i>
+            Se connecter avec Discord
+          </a>
+        </div>
+
+        <!-- CONDITIONS (affichées seulement si requireTos=true) -->
+        <% if (requireTos) { %>
+          <div class="mt-6">
+            <label class="flex items-start gap-3 cursor-pointer select-none">
+              <input id="tos" type="checkbox"
+                class="tos-checkbox mt-0.5 cursor-pointer"
+                style="--check-color:<%= websiteColor %>;">
+              <span class="text-sm text-gray-300 leading-relaxed">
+                J’accepte les
+                <a href="/conditions" target="_blank" class="underline decoration-white/20 hover:decoration-white/50">
+                  conditions d’utilisation
+                </a>
+                et la
+                <a href="/privacy" target="_blank" class="underline decoration-white/20 hover:decoration-white/50">
+                  politique de confidentialité
+                </a>.
+              </span>
+            </label>
+
+            <p id="tosError" class="hidden mt-2 text-xs text-red-300">
+              Tu dois accepter les conditions pour continuer.
+            </p>
+          </div>
+        <% } %>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const REQUIRE_TOS = <%= requireTos ? "true" : "false" %>;
+
+      const btn = document.getElementById("loginBtn");
+      if (!btn) return;
+
+      if (!REQUIRE_TOS) return;
+
+      const tos = document.getElementById("tos");
+      const err = document.getElementById("tosError");
+
+      function setEnabled(enabled) {
+        if (enabled) {
+          btn.href = "/login";
+          btn.classList.remove("opacity-50", "cursor-not-allowed");
+          err && err.classList.add("hidden");
+        } else {
+          btn.href = "#";
+          btn.classList.add("opacity-50", "cursor-not-allowed");
+        }
+      }
+
+      setEnabled(false);
+
+      tos.addEventListener("change", () => {
+        setEnabled(tos.checked);
+      });
+
+      btn.addEventListener("click", (e) => {
+        if (!tos.checked) {
+          e.preventDefault();
+          err && err.classList.remove("hidden");
+          btn.animate(
+            [
+              { transform: "translateX(0)" },
+              { transform: "translateX(-6px)" },
+              { transform: "translateX(6px)" },
+              { transform: "translateX(0)" }
+            ],
+            { duration: 220 }
+          );
+        }
+      });
+    })();
+  </script>
+
+  <style>
+    .tos-checkbox{
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.06);
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 18px;
+      line-height: 1;
+      transition: background-color .15s ease, border-color .15s ease;
+    }
+    .tos-checkbox:checked{
+      background: var(--check-color);
+      border-color: var(--check-color);
+    }
+    .tos-checkbox:checked::after{
+      content: "✓";
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      transform: translateY(-0.5px);
+    }
+    .tos-checkbox:focus{
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.08);
+    }
+  </style>
+
+</body>
+</html>

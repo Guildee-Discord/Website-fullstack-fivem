@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <title>Lier mon compte — Website FiveM</title>
+    <%- include("../partials/head") %>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <%- include("../partials/nav", { user }) %>
+
+    <main class="max-w-2xl mx-auto p-6">
+      <div class="bg-white rounded-xl shadow p-6">
+        <h1 class="text-2xl font-bold">Lier mon compte FiveM</h1>
+
+        <p class="mt-2 text-gray-700">
+          Démo simple : colle ton <strong>identifier</strong> FiveM (ex: <code class="px-1 bg-gray-100 rounded">license:xxxx</code>).
+          <br />
+          En prod, préfère un <strong>code de liaison</strong> généré en jeu.
+        </p>
+
+        <% if (error) { %>
+          <div class="mt-4 bg-red-50 border border-red-200 rounded p-3 text-sm text-red-700">
+            <%= error %>
+          </div>
+        <% } %>
+
+        <form class="mt-6 space-y-4" method="POST" action="/link">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Identifier FiveM</label>
+            <input name="identifier" class="mt-1 w-full px-3 py-2 border rounded" placeholder="license:..." required />
+            <p class="mt-1 text-xs text-gray-500">
+              On n'écrit jamais dans <code class="px-1 bg-gray-100 rounded">users.identifier</code>.
+            </p>
+          </div>
+
+          <div class="bg-yellow-50 border border-yellow-200 rounded p-3 text-sm text-yellow-800">
+            Astuce: ce template ne fait pas encore le "code de liaison" in-game.
+            C'est la prochaine étape si tu veux éviter la saisie manuelle.
+          </div>
+
+          <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700" type="submit">
+            Lier mon compte
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <%- include("../partials/footer") %>
+  </body>
+</html>
