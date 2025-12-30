@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://i.postimg.cc/vHxQS2Tn/website.png" width="720" alt="Présentation du site Guildee"/>
+  <img src="https://i.postimg.cc/6pQFmyYj/Color-Picker-online-HEX-Color-Picker-HTML-Color-Picker-et-7-pages-de-plus-Personnel-Microsof.png" width="720" alt="Présentation du site Guildee"/>
 </p>
 
 ---
