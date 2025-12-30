@@ -1,5 +1,3 @@
-# 🌐 Guildee — Website FiveM connecté à Discord
-
 <p align="center">
   <img src="https://i.postimg.cc/vBNj3TbR/logo.png" width="140" alt="Guildee logo"/>
 </p>
