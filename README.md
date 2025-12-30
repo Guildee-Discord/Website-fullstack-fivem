@@ -7,6 +7,10 @@
   Express · EJS · Passport · Discord OAuth · Tailwind CDN
 </p>
 
+<p align="center">
+  <img src="https://i.postimg.cc/vHxQS2Tn/Guildee-et-10-pages-de-plus-Personnel-Microsoft-Edge-30-12-2025-17-20-08.png" width="140" alt="Guildee logo"/>
+</p>
+
 ---
 
 ## ✨ Pourquoi Guildee
