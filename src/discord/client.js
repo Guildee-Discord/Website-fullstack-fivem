@@ -1,5 +1,5 @@
-const { Client, GatewayIntentBits, ActivityType } = require("discord.js");
-
+const { Client, GatewayIntentBits, ActivityType, Events } = require("discord.js");
+const config_bot = require("../../configuration/bot.json");
 let client = null;
 
 function toActivityType(type) {
@@ -11,20 +11,18 @@ function toActivityType(type) {
 }
 
 async function initDiscordClient(config) {
-  const botCfg = config.discordBot || {};
+  const botCfg = config_bot.discord || {};
   const enabled = botCfg.enabled !== false;
 
-  if (!enabled) {
-    return { ok: true, enabled: false };
-  }
+  if (!enabled) return { ok: true, enabled: false };
 
   if (!botCfg.token) {
-    return { ok: false, enabled: true, error: "Token manquant (config_botdiscord.json)" };
+    return { ok: false, enabled: true, error: "Token manquant (bot.json)" };
   }
 
   client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-  client.once("ready", () => {
+  client.once(Events.ClientReady, () => {
     try {
       const activity = botCfg.activity || {};
       client.user.setPresence({
@@ -39,7 +37,7 @@ async function initDiscordClient(config) {
 
   try {
     await client.login(botCfg.token);
-    return { ok: true, enabled: true, username: client.user.tag };
+    return { ok: true, enabled: true };
   } catch (e) {
     return { ok: false, enabled: true, error: e.message };
   }

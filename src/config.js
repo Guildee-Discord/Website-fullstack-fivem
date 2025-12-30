@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { printBox } = require("../src/function/printBox");
-const config_botdiscord = require("../configuration/botdiscord.json");
+const config_botdiscord = require("../configuration/bot.json");
 
 function fatal(title, lines) {
   const red = "\x1b[31m";

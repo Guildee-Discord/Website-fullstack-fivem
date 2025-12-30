@@ -46,7 +46,7 @@
         <!-- BUTTON -->
         <div class="mt-6">
           <a id="loginBtn"
-             href="<%= requireTos ? '#' : '/login' %>"
+             href="<%= requireTos ? '#' : '/connexion/auth' %>"
              class="flex items-center justify-center gap-3 rounded-xl px-4 py-2.5 font-semibold text-white transition <%= requireTos ? 'opacity-50 cursor-not-allowed' : '' %>"
              style="background-color:<%= websiteColor %>;box-shadow:0 10px 24px <%= websiteColor %>55;">
             <i class="fa-brands fa-discord text-lg"></i>
@@ -97,7 +97,7 @@
 
       function setEnabled(enabled) {
         if (enabled) {
-          btn.href = "/login";
+          btn.href = "/connexion/auth";
           btn.classList.remove("opacity-50", "cursor-not-allowed");
           err && err.classList.add("hidden");
         } else {

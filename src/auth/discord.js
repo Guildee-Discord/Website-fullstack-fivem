@@ -1,6 +1,6 @@
 const DiscordStrategy = require("passport-discord").Strategy;
 const { upsertDiscordProfile, findLinkedUserByDiscordId } = require("../models/user");
-const config_botdiscord = require("../../configuration/botdiscord.json");
+const config_botdiscord = require("../../configuration/bot.json");
 
 function configureDiscordAuth(passport, config) {
   // Toujours stocker le discord_id
