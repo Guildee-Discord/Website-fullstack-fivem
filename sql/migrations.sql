@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS migrations (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  module VARCHAR(64) NOT NULL,
-  filename VARCHAR(255) NOT NULL,
-  applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_migration (module, filename)
-);
