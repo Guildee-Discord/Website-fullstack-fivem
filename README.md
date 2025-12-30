@@ -1,4 +1,4 @@
-# 🌐 Discord OAuth + Express + MySQL  
+## 🌐 Website FiveM — Discord OAuth + Express + MySQL  
 ### Template Web connecté à une base FiveM existante
 
 Template minimaliste pour créer un site web connecté à une base **FiveM déjà en production**, sans toucher à l’architecture existante.
@@ -111,4 +111,4 @@ npm run dev
 - Aucun `UPDATE` automatique  
 - Seulement `SELECT` + `INSERT`  
 - Aucune donnée FiveM n’est écrasée  
-- `config.json` ignoré par git
+- `config.json` ignoré par git  
