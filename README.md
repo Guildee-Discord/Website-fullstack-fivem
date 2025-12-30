@@ -8,7 +8,7 @@ Ce projet utilise :
 - **Express.js**  
 - **Authentification Discord** (Passport)  
 - **MySQL via une seule URL** (format FiveM)  
-- **HTML + Tailwind via cdnjs**  
+- **HTML + Tailwind**  
 - **INSERT uniquement** : jamais de modification automatique de données existantes  
 
 ---
