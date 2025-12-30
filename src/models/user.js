@@ -11,7 +11,6 @@ const { getDb } = require("../db");
  * - discord_username VARCHAR(100) NULL
  * - discord_avatar VARCHAR(100) NULL
  */
-
 function toPublicUser(row) {
   if (!row) return null;
   return {

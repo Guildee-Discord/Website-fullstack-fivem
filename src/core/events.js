@@ -5,7 +5,6 @@ class AppEvents extends EventEmitter {
     super();
     this.logger = logger || null;
 
-    // évite les warnings si beaucoup de modules branchent des listeners
     this.setMaxListeners(50);
   }
 

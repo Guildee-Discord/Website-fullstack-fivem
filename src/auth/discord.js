@@ -3,15 +3,12 @@ const { upsertDiscordProfile, findLinkedUserByDiscordId } = require("../models/u
 const config_botdiscord = require("../../configuration/bot.json");
 
 function configureDiscordAuth(passport, config) {
-  // Toujours stocker le discord_id
   passport.serializeUser((user, done) => done(null, user.discord_id));
 
   passport.deserializeUser(async (discordId, done) => {
     try {
       const linkedUser = await findLinkedUserByDiscordId(discordId);
 
-      // Si pas lié, on renvoie un user minimal au lieu de null
-      // (comme ça req.isAuthenticated() reste vrai)
       if (!linkedUser) {
         return done(null, { discord_id: String(discordId), linked: false });
       }

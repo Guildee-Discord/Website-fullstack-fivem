@@ -1,9 +1,10 @@
 const fs = require("fs");
 const path = require("path");
+const config_modules = require("../../configuration/modules.json");
 
 function loadModules(ctx) {
   const modulesDir = path.join(__dirname, "..", "modules");
-  const enabled = ctx.config.modules || {};
+  const enabled = config_modules.modules || {};
 
   if (!fs.existsSync(modulesDir)) return;
 

@@ -4,7 +4,7 @@
   "repository": {
     "url": "https://github.com/Guildee-Discord/Website-fullstack-fivem"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "type": "commonjs",
   "main": "server.packed.js",
@@ -19,6 +19,7 @@
     "express-session": "^1.17.3",
     "mysql2": "^3.11.4",
     "passport": "^0.7.0",
-    "passport-discord": "^0.1.4"
+    "passport-discord": "^0.1.4",
+    "yaml": "^2.8.2"
   }
 }

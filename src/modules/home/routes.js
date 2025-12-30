@@ -1,11 +1,19 @@
 const express = require("express");
-const passport = require("passport");
-const { findLinkedUserByDiscordId } = require("../../models/user");
+const fs = require("fs");
+const path = require("path");
+const YAML = require("yaml");
 const config_website = require("../../../configuration/website.json");
 const config_fivem = require("../../../configuration/fivem.json");
 
+function loadTexts(lang = "fr") {
+  const file = path.join(process.cwd(), "src/modules/home", `home.yml`);
+  const raw = fs.readFileSync(file, "utf8");
+  return YAML.parse(raw);
+}
+
 module.exports = (ctx) => {
   const router = express.Router();
+  const texts = loadTexts("fr");
 
   async function getOnlinePlayersCount() {
     const baseUrl = config_fivem.fivem.baseUrl;
@@ -25,8 +33,6 @@ module.exports = (ctx) => {
   router.get("/", async (req, res) => {
     const website = config_website.website || {};
 
-    console.log(website.gradient.accent)
-
     const name = (website.name || "W").trim();
     const parts = name.split(/\s+/);
     const websiteInitial =
@@ -43,8 +49,8 @@ module.exports = (ctx) => {
       websiteInitial,
       websiteLogo: website.logoUrl || null,
       requireTos: website.requireTos === true,
-
-      onlineCount: onlineCount ?? 0
+      onlineCount: onlineCount ?? 0,
+      texts: texts
     });
   });
 

@@ -1,0 +1,32 @@
+hero:
+  badge: "Serveur #1 France"
+  subtitle: "Plongez dans une expérience de jeu de rôle inédite. Économie dynamique, jobs exclusifs, et une communauté active 24/7."
+  cta_join: "Rejoindre Maintenant"
+  cta_discord: "Discord"
+navbar:
+  links:
+  home: "Accueil"
+  features: "Features"
+  jobs: "Métiers"
+  store: "Boutique"
+  rules: "Règlement"
+  online_suffix: "EN LIGNE"
+  login: "Connexion"
+  dashboard: "Dashboard"
+  link_account: "Lier mon compte"
+  unlink_account: "Délier mon compte"
+  logout: "Déconnexion"
+sections:
+  features_title: "FEATURES"
+  features_subtitle: "Technologies de pointe pour une expérience ultime"
+  jobs_title: "MÉTIERS"
+  jobs_subtitle: "Choisissez votre voie dans la ville"
+cta:
+  title: "PRÊT À JOUER ?"
+  subtitle: "Rejoignez des milliers de joueurs maintenant"
+  join: "REJOINDRE LE SERVEUR"
+  discord: "💬 DISCORD"
+footer:
+  about_title: "CITY-RP"
+  about_text: "Serveur FiveM nouvelle génération. L'expérience RP la plus immersive de France."
+  copyright: "© 2025 CITY-RP. Tous droits réservés. Non affilié à Rockstar Games ou Take-Two Interactive."

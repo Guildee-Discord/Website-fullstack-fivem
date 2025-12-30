@@ -10,7 +10,7 @@ function createApp(ctx) {
   ctx.app = app;
   ctx.express = express;
 
-  const coreViews = path.join(__dirname, "..", "..", "views");
+  const coreViews = path.join(__dirname, "..", "views");
   ctx.coreViews = coreViews;
 
   ctx.viewPaths = ctx.viewPaths || [];
@@ -31,7 +31,6 @@ function createApp(ctx) {
     })
   );
 
-  // ✅ Passport init
   app.use(passport.initialize());
   app.use(passport.session());
 
