@@ -7,6 +7,7 @@ module.exports = {
   async init(ctx) {
     const router = require("./routes")(ctx);
     ctx.app.use("/", router);
+    
 
     await checkModuleUpdate({
       logger: ctx.logger,
