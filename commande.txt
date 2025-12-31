@@ -1,0 +1,3 @@
+node pack.js server.js server.packed.js
+
+node unpack.js server.packed.js server.js

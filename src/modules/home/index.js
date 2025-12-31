@@ -1,16 +1,17 @@
-const BLUE = "\x1b[34m";
-const GREEN = "\x1b[32m";
-const RESET = "\x1b[0m";
-const version = require("./module.json");
+const { checkModuleUpdate } = require("../../function/github");
 
 module.exports = {
   meta: require("./module.json"),
   viewsPath: __dirname + "/views",
 
-  init(ctx) {
+  async init(ctx) {
     const router = require("./routes")(ctx);
     ctx.app.use("/", router);
 
-    ctx.logger?.info?.(`${BLUE}[module]${RESET} home - version ${GREEN}${version.version}${RESET}`);
+    await checkModuleUpdate({
+      logger: ctx.logger,
+      meta: module.exports.meta,
+      debug: false,
+    });
   }
 };
