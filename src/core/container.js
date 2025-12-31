@@ -7,7 +7,7 @@ function createContainer(config) {
     error: (m) => console.error("❌", m),
   };
 
-  return {
+  const ctx = {
     config,
     viewPaths: [],
     logger,
@@ -20,13 +20,29 @@ function createContainer(config) {
       dashboard: [],
     },
 
+    // Webhooks (sera rempli par le module logs/webhook)
+    webhooks: null,
+
+    // Promise résolue quand le module webhook est prêt
+    webhooksReady: null,
+    _resolveWebhooksReady: null,
+
     middlewares: {
       ensureAuth(req, res, next) {
-        if (req.isAuthenticated && req.isAuthenticated()) return next();
-        res.redirect("/connexion");
-      }
-    }
+        try {
+          if (req?.isAuthenticated?.() === true) return next();
+        } catch (_) {}
+        return res.redirect("/connexion");
+      },
+    },
   };
+
+  // init promise "ready"
+  ctx.webhooksReady = new Promise((resolve) => {
+    ctx._resolveWebhooksReady = resolve;
+  });
+
+  return ctx;
 }
 
 module.exports = { createContainer };

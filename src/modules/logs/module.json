@@ -1,8 +1,12 @@
 {
   "name": "Logs system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "enabled": true,
   "id": "logs",
   "description": "Système de gestion des logs",
+  "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-logs/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-logs/tree/main"
+  },
   "dependsOn": []
 }

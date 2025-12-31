@@ -1,16 +1,28 @@
-const BLUE = "\x1b[34m";
-const GREEN = "\x1b[32m";
-const RESET = "\x1b[0m";
-const version = require("./module.json");
+const { checkModuleUpdate } = require("../../function/github");
+const config_modules = require("../../../configuration/modules.json");
 
 module.exports = {
   meta: require("./module.json"),
   viewsPath: __dirname + "/views",
 
-  init(ctx) {
+  async init(ctx) {
     const router = require("./routes")(ctx);
     ctx.app.use("/connexion", router);
 
-    ctx.logger?.info?.(`${BLUE}[module]${RESET} login - version ${GREEN}${version.version}${RESET}`);
+    if (config_modules.modules.logs) {
+      await ctx.webhooksReady;
+      try {
+        await ctx.webhooks?.login?.send?.({ content: "✅ Module Login démarré test" });
+      } catch (e) {
+        const msg = e?.message || JSON.stringify(e);
+        ctx.logger?.warn?.(`[login] webhook erreur: ${msg}`);
+      }
+    }
+
+    await checkModuleUpdate({
+      logger: ctx.logger,
+      meta: module.exports.meta,
+      debug: false,
+    });
   }
 };

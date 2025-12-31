@@ -4,7 +4,7 @@
   "repository": {
     "url": "https://github.com/Guildee-Discord/Website-fullstack-fivem"
   },
-  "version": "1.0.4",
+  "version": "1.0.7",
   "private": true,
   "type": "commonjs",
   "main": "server.packed.js",
