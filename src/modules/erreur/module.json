@@ -1,0 +1,10 @@
+{
+  "name": "erreur",
+  "version": "1.0.0",
+  "description": "Module pour gérer les erreurs dans l'application",
+  "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-home/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-home/tree/main"
+  },
+  "dependsOn": []
+}

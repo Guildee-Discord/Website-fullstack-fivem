@@ -1,5 +1,5 @@
 {
-  "name": "Logs system",
+  "name": "logs",
   "version": "1.0.1",
   "enabled": true,
   "id": "logs",
