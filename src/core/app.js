@@ -2,7 +2,8 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const path = require("path");
-const { configureDiscordAuth } = require("../auth/discord"); // ✅
+const toast = require("./toastMiddleware");
+const { configureDiscordAuth } = require("../auth/discord");
 
 function createApp(ctx) {
   const app = express();
@@ -30,6 +31,9 @@ function createApp(ctx) {
       cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 },
     })
   );
+
+  app.use(toast);
+
 
   app.use(passport.initialize());
   app.use(passport.session());
