@@ -1,29 +1,27 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const YAML = require("yaml");
 const config_website = require("../../../configuration/website.json");
 const config_fivem = require("../../../configuration/fivem.json");
-
-function loadTexts(lang = "fr") {
-  const file = path.join(process.cwd(), "src/modules/home", `home.yml`);
-  const raw = fs.readFileSync(file, "utf8");
-  return YAML.parse(raw);
-}
+const config_modules = require("../../../configuration/modules.json");
 
 module.exports = (ctx) => {
   const router = express.Router();
-  const texts = loadTexts("fr");
 
   async function getOnlinePlayersCount() {
-    const baseUrl = config_fivem.fivem.baseUrl;
-    if (!baseUrl) return null;
+    let baseUrl = config_fivem?.fivem?.baseUrl;
+    if (!baseUrl) {
+      return null;
+    }
+
+    baseUrl = baseUrl.replace(/\/+$/, "");
+
+    const url = `${baseUrl}/players.json`;
 
     try {
-      const res = await fetch(`${baseUrl}/players.json`, { method: "GET" });
-      if (!res.ok) return null;
+      const res = await fetch(url);
 
-      const players = await res.json();
+      const text = await res.text();
+
+      const players = JSON.parse(text);
       return Array.isArray(players) ? players.length : null;
     } catch (e) {
       return null;
@@ -32,17 +30,18 @@ module.exports = (ctx) => {
 
   router.get("/", async (req, res) => {
     const website = config_website.website || {};
-
     const name = (website.name || "W").trim();
     const parts = name.split(/\s+/);
     const websiteInitial =
       parts.length === 1
         ? parts[0][0].toUpperCase()
         : (parts[0][0] + parts[1][0]).toUpperCase();
-
     const onlineCount = await getOnlinePlayersCount();
 
     res.render("index", {
+      toast: null,
+      serverDown: onlineCount === null || onlineCount === undefined,
+      config_modules: config_modules.modules || {},
       config: website,
       user: req.user || null,
       websiteColor: website.color || "#5865f2",
@@ -50,7 +49,6 @@ module.exports = (ctx) => {
       websiteLogo: website.logoUrl || null,
       requireTos: website.requireTos === true,
       onlineCount: onlineCount ?? 0,
-      texts: texts
     });
   });
 

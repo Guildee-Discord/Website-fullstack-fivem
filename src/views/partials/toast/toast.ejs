@@ -1,0 +1,47 @@
+<div id="toast" class="toast <%= toast && toast.type ? toast.type : '' %>">
+  <span id="toast-message"><%= toast && toast.message ? toast.message : '' %></span>
+</div>
+
+<script>
+  function showToast(message, type = "error", duration = 3000) {
+    const toast = document.getElementById("toast");
+    const msg = document.getElementById("toast-message");
+
+    msg.textContent = message;
+    toast.className = "toast show " + type;
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, duration);
+  }
+</script>
+
+<style>
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #333;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity .3s, transform .3s;
+    z-index: 9999;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast.error {
+    background: #c0392b;
+  }
+
+  .toast.success {
+    background: #27ae60;
+  }
+</style>

@@ -1,0 +1,7 @@
+Dans n’importe quel module, tu peux faire :
+
+ctx.logger?.info?.("Met ton texte ici");
+
+ctx.logger?.warn?.("Met ton texte ici");
+
+ctx.logger?.error?.("Met ton texte ici");

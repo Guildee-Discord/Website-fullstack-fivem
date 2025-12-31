@@ -2,5 +2,9 @@
   "name": "dashboard",
   "version": "1.0.0",
   "description": "Page dashboard + interface utilisateur",
+    "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-dashboard/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-dashboard/tree/main"
+  },
   "dependsOn": []
 }

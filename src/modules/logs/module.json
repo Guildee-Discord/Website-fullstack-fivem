@@ -1,0 +1,8 @@
+{
+  "name": "Logs system",
+  "version": "1.0.0",
+  "enabled": true,
+  "id": "logs",
+  "description": "Système de gestion des logs",
+  "dependsOn": []
+}

@@ -8,13 +8,14 @@
     <%= config?.name || "Undefined" %>
   </title>
   <% if (websiteLogo) { %>
-    <link rel="icon" type="image/png" href="<%= websiteLogo %>">
-    <meta property="og:image" content="<%= websiteLogo %>">
-    <meta name="twitter:image" content="<%= websiteLogo %>">
-    <% } %>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <%- include("style-index.ejs") %>
-    <%- include(coreView("partials/icons/font-awesome")) %>
+  <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+  <meta property="og:image" content="<%= websiteLogo %>">
+  <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <%- include("style-index.ejs") %>
+  <%- include(coreView("partials/icons/font-awesome")) %>
+  <%- include(coreView("partials/toast/toast")) %>
 </head>
 
 <body class="bg-black text-white">
@@ -29,11 +30,9 @@
         <!-- Logo -->
         <div class="flex items-center space-x-3">
           <div class="relative w-14 h-14">
-            <div
-              class="absolute inset-0 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] rounded-lg blur-sm opacity-75">
+            <div class="absolute inset-0 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] rounded-lg blur-sm opacity-75">
             </div>
-            <div
-              class="relative w-14 h-14 bg-black rounded-lg border-2 border-[color:var(--accent)] flex items-center justify-center">
+            <div class="relative w-14 h-14 bg-black rounded-lg border-2 border-[color:var(--accent)] flex items-center justify-center">
               <span class="text-4xl font-black logo-text cyber-text leading-none">
                 <%= websiteInitial %>
               </span>
@@ -46,7 +45,7 @@
             <p class="text-xs text-[color:var(--accent)] tracking-widest">FIVEM SERVER</p>
           </div>
         </div>
-  
+
         <!-- Desktop Menu -->
         <div class="hidden lg:flex items-center space-x-8">
           <a href="#home" class="nav-link text-sm font-semibold uppercase tracking-wider">Accueil</a>
@@ -54,168 +53,165 @@
           <a href="#jobs" class="nav-link text-sm font-semibold uppercase tracking-wider">Métiers</a>
           <a href="#store" class="nav-link text-sm font-semibold uppercase tracking-wider">Boutique</a>
           <a href="#rules" class="nav-link text-sm font-semibold uppercase tracking-wider">Règlement</a>
-  
+
           <div class="flex items-center space-x-3">
-            <div class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-green-500/20 border border-green-500/50">
-              <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-              <span class="text-xs font-bold text-green-400">
-                <%= onlineCount %> EN LIGNE
-              </span>
-            </div>
-  
+
+
+<div class="flex items-center space-x-2 px-4 py-2 rounded-lg border
+  <%= serverDown
+    ? 'bg-red-500/20 border-red-500/50'
+    : 'bg-green-500/20 border-green-500/50' %>">
+
+  <div class="w-2 h-2 rounded-full animate-pulse
+    <%= serverDown ? 'bg-red-400' : 'bg-green-400' %>">
+  </div>
+
+  <span class="text-xs font-bold
+    <%= serverDown ? 'text-red-400' : 'text-green-400' %>">
+
+    <%= serverDown ? 'SERVEUR HORS LIGNE' : `${onlineCount} EN LIGNE` %>
+
+  </span>
+</div>
+
+
+            <% if (config_modules.login) { %>
             <% if (!user) { %>
-              <!-- Connexion -->
-              <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
-                <i class="fa-brands fa-discord"></i>
-                <span>Connexion</span>
-              </a>
-              <% } else { %>
-                <!-- User dropdown -->
-                <details class="relative">
-                  <summary class="list-none cursor-pointer select-none">
-                    <div
-                      class="flex items-center gap-3 px-3 py-2 rounded-lg border border-cyan-400/30 bg-black/40 hover:bg-cyan-400/10 transition">
-                      <% const avatarUrl=user.avatar ? (user.avatar.startsWith("http") ? user.avatar :
+            <!-- Connexion -->
+            <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
+              <i class="fa-brands fa-discord"></i>
+              <span>Connexion</span>
+            </a>
+            <% } else { %>
+            <!-- User dropdown -->
+            <details class="relative">
+              <summary class="list-none cursor-pointer select-none">
+                <div class="flex items-center gap-3 px-3 py-2 rounded-lg border border-cyan-400/30 bg-black/40 hover:bg-cyan-400/10 transition">
+                  <% const avatarUrl=user.avatar ? (user.avatar.startsWith("http") ? user.avatar :
                         `https://cdn.discordapp.com/avatars/${user.discord_id}/${user.avatar}.png?size=64`) : null; %>
-                        <div
-                          class="h-10 w-10 rounded-lg overflow-hidden border border-cyan-400/30 bg-black grid place-items-center">
-                          <% if (avatarUrl) { %>
-                            <img src="<%= avatarUrl %>" alt="Avatar" class="h-full w-full object-cover">
-                            <% } else { %>
-                              <span class="font-black cyber-text">
-                                <%= (user.username || "U" ).charAt(0).toUpperCase() %>
-                              </span>
-                              <% } %>
-                        </div>
-  
-                        <div class="leading-tight hidden xl:block">
-                          <p class="text-sm font-bold text-white truncate max-w-[140px]">
-                            <%= user.username || "Utilisateur" %>
-                          </p>
-                          <p class="text-[11px] text-cyan-300/80">
-                            <%= user.linked ? "Compte lié" : "Non lié" %>
-                          </p>
-                        </div>
-  
-                        <i class="fa-solid fa-chevron-down text-cyan-300 text-xs opacity-90"></i>
-                    </div>
-                  </summary>
-  
-                  <div
-                    class="absolute right-0 mt-3 w-64 rounded-xl border border-cyan-400/30 bg-[#070716]/95 backdrop-blur shadow-[0_20px_60px_rgba(0,255,255,.15)] overflow-hidden">
-                    <div class="px-4 py-3 border-b border-cyan-400/20">
-                      <p class="text-sm font-bold text-white truncate">
-                        <%= user.username || "Utilisateur" %>
-                      </p>
-                      <p class="text-xs text-gray-400 truncate">Discord ID: <%= user.discord_id %>
-                      </p>
-                    </div>
-  
-                    <nav class="p-2 text-sm">
-                      <a href="/dashboard"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cyan-400/10 transition">
-                        <i class="fa-solid fa-chart-line text-cyan-300 w-5 text-center"></i>
-                        Dashboard
-                      </a>
-  
-                      <% if (!user.linked) { %>
-                        <a href="/link"
-                          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cyan-400/10 transition">
-                          <i class="fa-solid fa-link text-cyan-300 w-5 text-center"></i>
-                          Lier mon compte
-                        </a>
-                        <% } else { %>
-                          <form method="POST" action="/unlink" class="px-1">
-                            <button type="submit"
-                              class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 transition text-left"
-                              onclick="return confirm('Délier ton compte FiveM ?');">
-                              <i class="fa-solid fa-unlink text-red-300 w-5 text-center"></i>
-                              Délier mon compte
-                            </button>
-                          </form>
-                          <% } %>
-  
-                            <a href="/logout"
-                              class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-purple-500/10 transition text-purple-200">
-                              <i class="fa-solid fa-right-from-bracket text-purple-300 w-5 text-center"></i>
-                              Déconnexion
-                            </a>
-                    </nav>
+                  <div class="h-10 w-10 rounded-lg overflow-hidden border border-cyan-400/30 bg-black grid place-items-center">
+                    <% if (avatarUrl) { %>
+                    <img src="<%= avatarUrl %>" alt="Avatar" class="h-full w-full object-cover">
+                    <% } else { %>
+                    <span class="font-black cyber-text">
+                      <%= (user.username || "U" ).charAt(0).toUpperCase() %>
+                    </span>
+                    <% } %>
                   </div>
-                </details>
-                <% } %>
+
+                  <div class="leading-tight hidden xl:block">
+                    <p class="text-sm font-bold text-white truncate max-w-[140px]">
+                      <%= user.username || "Utilisateur" %>
+                    </p>
+                    <p class="text-[11px] text-cyan-300/80">
+                      <%= user.linked ? "Compte lié" : "Non lié" %>
+                    </p>
+                  </div>
+
+                  <i class="fa-solid fa-chevron-down text-cyan-300 text-xs opacity-90"></i>
+                </div>
+              </summary>
+
+              <div class="absolute right-0 mt-3 w-64 rounded-xl border border-cyan-400/30 bg-[#070716]/95 backdrop-blur shadow-[0_20px_60px_rgba(0,255,255,.15)] overflow-hidden">
+                <div class="px-4 py-3 border-b border-cyan-400/20">
+                  <p class="text-sm font-bold text-white truncate">
+                    <%= user.username || "Utilisateur" %>
+                  </p>
+                  <p class="text-xs text-gray-400 truncate">Discord ID: <%= user.discord_id %>
+                  </p>
+                </div>
+
+                <nav class="p-2 text-sm">
+                  <a href="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cyan-400/10 transition">
+                    <i class="fa-solid fa-chart-line text-cyan-300 w-5 text-center"></i>
+                    Dashboard
+                  </a>
+
+                  <% if (!user.linked) { %>
+                  <a href="/link" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cyan-400/10 transition">
+                    <i class="fa-solid fa-link text-cyan-300 w-5 text-center"></i>
+                    Lier mon compte
+                  </a>
+                  <% } else { %>
+                  <form method="POST" action="/unlink" class="px-1">
+                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 transition text-left" onclick="return confirm('Délier ton compte FiveM ?');">
+                      <i class="fa-solid fa-unlink text-red-300 w-5 text-center"></i>
+                      Délier mon compte
+                    </button>
+                  </form>
+                  <% } %>
+
+                  <a href="/logout" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-purple-500/10 transition text-purple-200">
+                    <i class="fa-solid fa-right-from-bracket text-purple-300 w-5 text-center"></i>
+                    Déconnexion
+                  </a>
+                </nav>
+              </div>
+            </details>
+            <% } %>
+            <% } else { %>
+            <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
+              <i class="fa-brands fa-discord"></i>
+              <span>Rejoindre le discord</span>
+            </a>
+            <% } %>
           </div>
         </div>
-  
+
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn"
-          class="lg:hidden p-2 rounded-lg border-2 border-[color:var(--accent)] hover:bg-[color:var(--accent)]/10 transition">
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg border-2 border-[color:var(--accent)] hover:bg-[color:var(--accent)]/10 transition">
           <svg class="w-6 h-6 text-[color:var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"></path>
-            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"></path>
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
     </div>
-  
+
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden mobile-menu lg:hidden">
       <div class="px-4 py-6 space-y-4">
-        <a href="#home"
-          class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Accueil</a>
-        <a href="#features"
-          class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Features</a>
-        <a href="#jobs"
-          class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Métiers</a>
-        <a href="#store"
-          class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Boutique</a>
-        <a href="#rules"
-          class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Règlement</a>
-  
+        <a href="#home" class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Accueil</a>
+        <a href="#features" class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Features</a>
+        <a href="#jobs" class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Métiers</a>
+        <a href="#store" class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Boutique</a>
+        <a href="#rules" class="block py-3 px-4 rounded-lg hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/30 transition">Règlement</a>
+
         <div class="pt-4 space-y-3">
-          <div
-            class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50">
+          <div class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50">
             <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
             <span class="text-sm font-bold text-green-400">
               <%= onlineCount %> JOUEURS EN LIGNE
             </span>
           </div>
-  
+
           <% if (!user) { %>
-            <a href="/connexion"
-              class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
-              <i class="fa-brands fa-discord"></i>
-              <span>Connexion</span>
-            </a>
-            <% } else { %>
-              <a href="/dashboard"
-                class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Dashboard</span>
-              </a>
-  
-              <% if (!user.linked) { %>
-                <a href="/link"
-                  class="w-full px-6 py-4 rounded-lg border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 transition font-bold uppercase tracking-wider text-center block">
-                  Lier mon compte
-                </a>
-                <% } else { %>
-                  <form method="POST" action="/unlink">
-                    <button type="submit"
-                      class="w-full px-6 py-4 rounded-lg border-2 border-red-500 text-red-300 hover:bg-red-500/10 transition font-bold uppercase tracking-wider"
-                      onclick="return confirm('Délier ton compte FiveM ?');">
-                      Délier mon compte
-                    </button>
-                  </form>
-                  <% } %>
-  
-                    <a href="/logout"
-                      class="w-full px-6 py-4 rounded-lg border-2 border-purple-500 text-purple-300 hover:bg-purple-500/10 transition font-bold uppercase tracking-wider text-center block">
-                      Déconnexion
-                    </a>
-                    <% } %>
+          <a href="/connexion" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
+            <i class="fa-brands fa-discord"></i>
+            <span>Connexion</span>
+          </a>
+          <% } else { %>
+          <a href="/dashboard" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+
+          <% if (!user.linked) { %>
+          <a href="/link" class="w-full px-6 py-4 rounded-lg border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 transition font-bold uppercase tracking-wider text-center block">
+            Lier mon compte
+          </a>
+          <% } else { %>
+          <form method="POST" action="/unlink">
+            <button type="submit" class="w-full px-6 py-4 rounded-lg border-2 border-red-500 text-red-300 hover:bg-red-500/10 transition font-bold uppercase tracking-wider" onclick="return confirm('Délier ton compte FiveM ?');">
+              Délier mon compte
+            </button>
+          </form>
+          <% } %>
+
+          <a href="/logout" class="w-full px-6 py-4 rounded-lg border-2 border-purple-500 text-purple-300 hover:bg-purple-500/10 transition font-bold uppercase tracking-wider text-center block">
+            Déconnexion
+          </a>
+          <% } %>
         </div>
       </div>
     </div>
@@ -225,14 +221,12 @@
   <section id="home" class="hero-section flex items-center justify-center relative pt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center py-20">
       <!-- Badge -->
-      <div
-        class="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] border border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] mb-8 neon-glow">
-        <svg class="w-5 h-5 text-[color:#d4af37]" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+      <div class="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] border border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] mb-8 neon-glow">
+        <svg class="w-5 h-5 text-[color:#D4AF37]" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
           </path>
         </svg>
-        <span class="text-sm font-bold uppercase tracking-wider"><%= texts.hero.badge %></span>
+        <span class="text-sm font-bold uppercase tracking-wider">Serveur #1 France</span>
       </div>
 
       <!-- Main Title -->
@@ -242,7 +236,8 @@
 
       <div class="space-y-4 mb-12">
         <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto">
-          <%= texts.hero.subtitle %>
+          Plongez dans une expérience de jeu de rôle inédite. Économie dynamique, jobs exclusifs, et une communauté
+          active 24/7.
         </p>
       </div>
 
@@ -251,8 +246,7 @@
         <button class="cyber-btn px-12 py-5 rounded-lg text-lg w-full sm:w-auto">
           <span class="relative z-10 flex items-center justify-center space-x-2">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
+              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
               </path>
             </svg>
             <span>Rejoindre Maintenant</span>
@@ -295,11 +289,9 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
               </path>
             </svg>
           </div>
@@ -309,11 +301,9 @@
         </div>
 
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
               </path>
             </svg>
           </div>
@@ -323,8 +313,7 @@
         </div>
 
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
               </path>
@@ -336,11 +325,9 @@
         </div>
 
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
               </path>
             </svg>
           </div>
@@ -350,11 +337,9 @@
         </div>
 
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
               </path>
             </svg>
           </div>
@@ -364,11 +349,9 @@
         </div>
 
         <div class="cyber-card p-8 rounded-2xl">
-          <div
-            class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
+          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent)] flex items-center justify-center mb-6 neon-glow">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
               </path>
             </svg>
           </div>
@@ -435,8 +418,7 @@
 
   <!-- CTA Section -->
   <section class="py-32 relative overflow-hidden">
-    <div
-      class="absolute inset-0 bg-gradient-to-br from-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] via-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] to-[color:color-mix(in_srgb,var(--accent)_20%,transparent)]">
+    <div class="absolute inset-0 bg-gradient-to-br from-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] via-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] to-[color:color-mix(in_srgb,var(--accent)_20%,transparent)]">
     </div>
     <div class="absolute inset-0 backdrop-blur-3xl"></div>
 
@@ -448,15 +430,13 @@
         <button class="cyber-btn px-16 py-6 rounded-xl text-xl w-full sm:w-auto">
           <span class="relative z-10 flex items-center justify-center space-x-3">
             <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
+              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
               </path>
             </svg>
             <span>REJOINDRE LE SERVEUR</span>
           </span>
         </button>
-        <button
-          class="px-16 py-6 rounded-xl text-xl border-2 border-[color:var(--accent)] text-[color:var(--accent)] hover:bg-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] transition w-full sm:w-auto font-bold uppercase tracking-wider">
+        <button class="px-16 py-6 rounded-xl text-xl border-2 border-[color:var(--accent)] text-[color:var(--accent)] hover:bg-[color:color-mix(in_srgb,var(--accent)_20%,transparent)] transition w-full sm:w-auto font-bold uppercase tracking-wider">
           💬 DISCORD
         </button>
       </div>
@@ -500,8 +480,7 @@
           </ul>
         </div>
       </div>
-      <div
-        class="border-t border-[color:color-mix(in_srgb,var(--accent)_35%,transparent)] pt-8 text-center text-gray-500 text-sm">
+      <div class="border-t border-[color:color-mix(in_srgb,var(--accent)_35%,transparent)] pt-8 text-center text-gray-500 text-sm">
         <p>&copy; 2025 CITY-RP. Tous droits réservés. Non affilié à Rockstar Games ou Take-Two Interactive.</p>
       </div>
     </div>
@@ -532,7 +511,7 @@
 
     // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
