@@ -4,6 +4,7 @@ const passport = require("passport");
 const path = require("path");
 const toast = require("./toastMiddleware");
 const { configureDiscordAuth } = require("../auth/discord");
+const i18n = require("./../middlewares/i18n");
 
 function createApp(ctx) {
   const app = express();
@@ -22,7 +23,6 @@ function createApp(ctx) {
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-
   app.use(
     session({
       secret: ctx.config.sessionSecret,
@@ -31,10 +31,8 @@ function createApp(ctx) {
       cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 },
     })
   );
-
   app.use(toast);
-
-
+  app.use(i18n());
   app.use(passport.initialize());
   app.use(passport.session());
 

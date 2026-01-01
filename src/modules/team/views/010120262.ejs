@@ -1,0 +1,174 @@
+<!doctype html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title><%= config?.name || "Undefined" %></title>
+  <% if (websiteLogo) { %>
+  <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+  <meta property="og:image" content="<%= websiteLogo %>">
+  <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <%- include(coreView("partials/icons/font-awesome")) %>
+  <%- include(coreView("partials/theme/theme")) %>
+</head>
+
+<body class="bg-black text-white">
+  <div class="animated-bg"></div>
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+
+  <%- include(coreView("partials/navbar/navbar")) %>
+
+  <section id="team" class="py-20 sm:py-28 md:py-32 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header / Banner -->
+      <div class="relative overflow-hidden rounded-3xl border border-[<%= config.color %>]/25 bg-black/40 mb-12 sm:mb-16">
+        <div class="absolute inset-0 opacity-40">
+          <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[<%= config.color %>]/20 blur-3xl"></div>
+          <div class="absolute -bottom-28 -left-20 w-80 h-80 rounded-full bg-[#0099cc]/15 blur-3xl"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.12),transparent_55%)]"></div>
+        </div>
+
+        <div class="relative z-10 p-8 sm:p-12 md:p-14">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[<%= config.color %>]/10 border border-[<%= config.color %>]/30 mb-5">
+            <i class="fa-solid fa-users text-[#D4AF37]"></i>
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/80">
+              Staff • Développement
+            </span>
+          </div>
+
+          <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+            <div class="max-w-3xl">
+              <h2 class="text-4xl sm:text-6xl md:text-7xl font-black cyber-text leading-[0.95]">
+                Team <%= config?.name || "Undefined" %>
+              </h2>
+              <p class="text-gray-400 mt-4 text-base sm:text-xl leading-relaxed">
+                Des humains (presque) normaux, staff actif, devs qui dorment peu, et une vision claire du RP.
+              </p>
+
+   
+            </div>
+
+            <div class="w-full lg:w-[420px]">
+              <div class="p-6 rounded-2xl border border-[<%= config.color %>]/20 bg-black/30">
+                <p class="text-sm text-gray-400">Pour ouvrir un ticket, rendez-vous directement sur notre Discord</p>
+                <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                  <a href="<%= config.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center justify-center gap-2 w-full">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>ticket</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glow-line"></div>
+      </div>
+
+      <!-- Team Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <% (team || []).forEach((m) => { %>
+        <article class="cyber-card p-6 sm:p-8 rounded-2xl relative overflow-hidden">
+          <div class="absolute inset-0 opacity-30 pointer-events-none">
+            <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[<%= config.color %>]/15 blur-3xl"></div>
+          </div>
+
+          <div class="relative z-10">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border border-[<%= config.color %>]/30 bg-black/40 flex items-center justify-center overflow-hidden">
+                    <% if (m.avatar) { %>
+                    <img src="<%= m.avatar %>" alt="<%= m.name %>" class="w-full h-full object-cover">
+                    <% } else { %>
+                    <i class="fa-solid <%= m.icon || 'fa-user' %> text-2xl text-[<%= config.color %>]"></i>
+                    <% } %>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-black text-white leading-tight"><%= m.name %></h3>
+                  <p class="text-sm sm:text-base text-gray-400"><%= m.subtitle || "" %></p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <% const s = m.socials || {}; %>
+                <% if (s.discord) { %>
+                <a href="<%= s.discord %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                  <i class="fa-brands fa-discord text-[<%= config.color %>]"></i>
+                </a>
+                <% } %>
+                <% if (s.github) { %>
+                <a href="<%= s.github %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                  <i class="fa-brands fa-github text-[<%= config.color %>]"></i>
+                </a>
+                <% } %>
+                <% if (s.x) { %>
+                <a href="<%= s.x %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                  <i class="fa-brands fa-x-twitter text-[<%= config.color %>]"></i>
+                </a>
+                <% } %>
+                <% if (s.tiktok) { %>
+                <a href="<%= s.tiktok %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                  <i class="fa-brands fa-tiktok text-[<%= config.color %>]"></i>
+                </a>
+                <% } %>
+              </div>
+            </div>
+
+            <p class="text-gray-300/90 mt-6 leading-relaxed text-sm sm:text-base"><%= m.bio %></p>
+
+            <div class="mt-6 space-y-3">
+              <% (m.skills || []).forEach(skill => { %>
+              <div class="flex items-center justify-between text-xs sm:text-sm">
+                <span class="text-gray-400 uppercase tracking-wider font-bold"><%= skill.label %></span>
+                <span class="text-[<%= config.color %>] font-black"><%= skill.value %>%</span>
+              </div>
+              <div class="h-2 rounded-full bg-white/5 border border-white/10 overflow-hidden">
+                <div class="h-full" style="width:<%= skill.value %>%; background-color:<%= config.color %>; opacity:.7;"></div>
+              </div>
+              <% }) %>
+            </div>
+
+            <div class="mt-6 flex flex-wrap gap-2">
+              <% (m.tags || []).forEach(tag => { %>
+              <span class="px-3 py-1.5 rounded-full text-xs border border-[<%= config.color %>]/20 bg-black/30 text-gray-200">
+                <%= tag %>
+              </span>
+              <% }) %>
+            </div>
+          </div>
+        </article>
+        <% }) %>
+      </div>
+
+
+      <!-- Bottom CTA -->
+      <div class="mt-10 sm:mt-16 max-w-4xl mx-auto">
+        <div class="cyber-card p-6 sm:p-10 rounded-2xl">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
+            <div>
+              <h3 class="text-2xl sm:text-3xl font-black cyber-text">Envie de rejoindre le staff ?</h3>
+              <p class="text-gray-400 mt-3 leading-relaxed text-sm sm:text-base">
+                Recrutement selon besoins (support, modération, events). Montre que t’es fiable, on parle.
+              </p>
+            </div>
+            <a href="<%= config.link.discord %>" class="cyber-btn px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg inline-flex items-center justify-center gap-2 w-full md:w-auto">
+              <i class="fa-brands fa-discord"></i>
+              <span>Candidater sur Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include(coreView("partials/footer/footer")) %>
+</body>
+
+</html>

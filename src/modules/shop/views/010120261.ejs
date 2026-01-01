@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title><%= config?.name || "Undefined" %></title>
+  <% if (websiteLogo) { %>
+  <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+  <meta property="og:image" content="<%= websiteLogo %>">
+  <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <%- include(coreView("partials/icons/font-awesome")) %>
+  <%- include(coreView("partials/theme/theme")) %>
+</head>
+
+<body class="bg-black text-white">
+  <div class="animated-bg"></div>
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+  <%- include(coreView("partials/navbar/navbar")) %>
+
+  <section id="store" class="py-20 sm:py-28 md:py-32 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 md:mb-20">
+        <h2 class="text-4xl sm:text-6xl md:text-7xl font-black mb-4 sm:mb-6 cyber-text">BOUTIQUE</h2>
+        <p class="text-lg sm:text-2xl text-gray-400">Soutenez le serveur <%= config?.name || "Undefined" %> ❤️</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <% shopItems.forEach(item => { %>
+        <div class="cyber-card p-6 sm:p-8 rounded-2xl">
+          <div class="flex items-start justify-between gap-4 mb-6">
+            <h3 class="text-xl sm:text-2xl font-bold text-[<%= config.color %>]">
+              <i class="<%= item.icon %>"></i> <%= item.name %> 
+            </h3>
+
+            <div class="shrink-0 text-right">
+              <% if (item.hasPromotion) { %>
+                <div class="relative inline-flex flex-col items-end gap-1">
+                  <!-- Chip promo (depuis le JSON) -->
+                  <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full
+                              bg-[<%= config.color %>]/15 border border-[<%= config.color %>]/30
+                              text-[<%= config.color %>] text-xs font-extrabold tracking-wide">
+                    <i class="fa-solid fa-tags"></i>
+                    <span><%= item.promoLabel || "PROMO" %></span>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+
+          </div>
+
+          <ul class="space-y-3 text-gray-300 text-sm sm:text-base">
+            <% item.features.forEach(f => { %>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-[<%= config.color %>]"></i>
+              <%= f %>
+            </li>
+            <% }) %>
+          </ul>
+
+          <div class="mt-8">
+            <a href="<%= item.link %>" class="cyber-btn w-full px-8 py-4 rounded-lg inline-flex items-center justify-center gap-2">
+              <i class="<%= item.icon %>"></i>
+              <span>
+                <%= item.buttonText %>
+                •
+                <%= (item.hasPromotion ? (item.finalPrice ?? item.price) : item.price).toFixed(2) %><%= shopCurrency %>
+              </span>
+            </a>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include(coreView("partials/footer/footer")) %>
+</body>
+
+</html>

@@ -1,7 +1,8 @@
 const express = require("express");
 const passport = require("passport");
 const DiscordStrategy = require("passport-discord").Strategy;
-const { findLinkedUserByDiscordId } = require("../../models/user");
+const { findLinkedUserByDiscordId, linkDiscordToIdentifier } = require("../../models/user");
+
 const config_website = require("../../../configuration/website.json");
 const config_module = require("../../../configuration/modules.json");
 const config_fivem = require("../../../configuration/fivem.json");
@@ -82,81 +83,102 @@ async function getOnlinePlayersCount() {
 module.exports = (ctx) => {
   const router = express.Router();
 
-  router.get("/", (req, res) => {
+  router.get("/", async (req, res) => {
     const website = ctx.config.website || {};
+    const name = (website.name || "W").trim();
+    const parts = name.split(/\s+/);
+    const websiteInitial =
+      parts.length === 1
+        ? parts[0][0].toUpperCase()
+        : (parts[0][0] + parts[1][0]).toUpperCase();
+    const onlineCount = await getOnlinePlayersCount();
+
+    let discordUser = null;
+    if (req.user) {
+      try {
+        const discordClient = getDiscordClient();
+        discordUser = await discordClient.users.fetch(req.user.discord_id, { force: true });
+      } catch (e) {
+        const errorMessages = [
+          {
+            type: "error",
+            text: `Utilisateur Discord introuvable`
+          }
+        ];
+
+        return res.status(404).render("404", {
+          errorMessages,
+          showDocsButton: false,
+          showHomeButton: true
+        });
+      }
+    }
 
     res.render("login", {
-      config: ctx.config,
-      user: req.user || null,
+      toast: null,
+      serverDown: onlineCount === null || onlineCount === undefined,
+      config_modules: config_module.modules || {},
+      config: website,
+      user: discordUser,
       websiteColor: website.color || "#5865f2",
-      websiteInitial: (website.name || "W")[0].toUpperCase(),
+      websiteInitial,
       websiteLogo: website.logoUrl || null,
       requireTos: website.requireTos === true,
+      onlineCount: onlineCount ?? 0,
     });
   });
 
   router.get("/linked", async (req, res) => {
     const website = config_website.website || {};
+    const name = (website.name || "W").trim();
+    const parts = name.split(/\s+/);
+    const websiteInitial =
+      parts.length === 1
+        ? parts[0][0].toUpperCase()
+        : (parts[0][0] + parts[1][0]).toUpperCase();
     const onlineCount = await getOnlinePlayersCount();
+
 
     if (!req.user) {
       return res.redirect("/connexion/auth");
     }
 
-    let discordUser = null;
-    try {
-      const discordClient = getDiscordClient();
-      discordUser = await discordClient.users.fetch(req.user.discord_id, { force: true });
-    } catch (e) {
-      const errorMessages = [
-        {
-          type: "error",
-          text: `Utilisateur Discord introuvable`
-        }
-      ];
-
-      if (config_module.modules.logs) {
-        ctx.fileLogs?.info?.(
-          `Utilisateur Discord introuvable pour l'ID ${req.user.discord_id}`
-        );
-
-        if (config_module.modules_features.logs.erreur) {
-          if (ctx.webhooksReady) {
-            try {
-              const ready = await ctx.webhooksReady;
-              if (ready && ctx.webhooks?.erreur?.send) {
-                await ctx.webhooks.erreur.send({
-                  embeds: [
-                    {
-                      description: `Utilisateur Discord introuvable pour l'ID \`${req.user.discord_id}\``,
-                      color: 0xef4444
-                    }
-                  ]
-                });
-              }
-            } catch (e) {
-              const msg = e?.message || (() => { try { return JSON.stringify(e); } catch { return String(e); } })();
-              ctx.logger?.warn?.(`[login] webhook erreur: ${msg}`);
-            }
-          }
-        }
-      }
-
-      return res.status(404).render("404", {
-        errorMessages,
-        showDocsButton: false,
-        showHomeButton: true
-      });
+    if (req.user.linked) {
+      return res.redirect("/");
     }
 
+    let discordUser = null;
+    if (req.user) {
+      try {
+        const discordClient = getDiscordClient();
+        discordUser = await discordClient.users.fetch(req.user.discord_id, { force: true });
+      } catch (e) {
+        const errorMessages = [
+          {
+            type: "error",
+            text: `Utilisateur Discord introuvable`
+          }
+        ];
+
+        return res.status(404).render("404", {
+          errorMessages,
+          showDocsButton: false,
+          showHomeButton: true
+        });
+      }
+    }
+  
     res.render("linked", {
-      config: website,
+      toast: null,
       serverDown: onlineCount === null || onlineCount === undefined,
+      config_modules: config_module.modules || {},
+      config: website,
       user: discordUser,
       websiteColor: website.color || "#5865f2",
-      websiteInitial: (website.name || "W")[0].toUpperCase(),
+      websiteInitial,
       websiteLogo: website.logoUrl || null,
       requireTos: website.requireTos === true,
+      onlineCount: onlineCount ?? 0,
     });
   });
 
@@ -166,28 +188,46 @@ module.exports = (ctx) => {
 
       const fivemId = String(req.body?.fivem_id || "").trim();
 
-      console.log("Liaison Discord -> FiveM pour Discord ID", req.user.discord_id, "avec FiveM ID:", fivemId);
+      if (req.user.linked) {
+        res.toast("error", "Ton identifiant FiveM est déjà lié");
+        return res.redirect("/connexion/linked");
+      }
 
-if (!fivemId || fivemId.length < 3) {
-  res.toast("error", "Ton identifiant FiveM est invalide.");
-  return res.redirect("/connexion/linked");
-}
+      if (!fivemId || fivemId.length < 3) {
+        res.toast("error", "Ton identifiant FiveM est invalide");
+        return res.redirect("/connexion/linked");
+      }
 
-      return res.redirect("/connexion/linked");
+      // On récupère username/avatar depuis la session (ou fallback)
+      const username = req.user?.username || req.session?.discordCache?.username || "unknown";
+      const avatar = req.user?.avatar || req.session?.discordCache?.avatar || null;
+
+      const result = await linkDiscordToIdentifier(
+        req.user.discord_id,
+        fivemId,
+        username,
+        avatar
+      );
+
+      if (!result.ok) {
+        if (result.error === "identifier_not_found") {
+          res.toast("error", "Identifiant FiveM introuvable en base.");
+          return res.redirect("/connexion/linked");
+        }
+        if (result.error === "discord_already_linked") {
+          res.toast("error", "Ce compte Discord est déjà lié.");
+          return res.redirect("/connexion/linked");
+        }
+
+        res.toast("error", "Impossible de lier ton compte. Réessaie.");
+        return res.redirect("/connexion/linked");
+      }
+
+      res.toast("success", "Compte lié avec succès ✅");
+      return res.redirect("/"); // ou /connexion/linked si tu veux rester sur la page
     } catch (e) {
-      const website = config_website.website || {};
-      const onlineCount = await getOnlinePlayersCount();
-
-      return res.status(500).render("linked", {
-        config: website,
-        serverDown: onlineCount === null || onlineCount === undefined,
-        user: req.user || null,
-        websiteColor: website.color || "#5865f2",
-        websiteInitial: (website.name || "W")[0].toUpperCase(),
-        websiteLogo: website.logoUrl || null,
-        requireTos: website.requireTos === true,
-        error: "Erreur serveur. Réessaie dans un moment.",
-      });
+      res.toast("error", "Erreur serveur. Réessaie dans un moment.");
+      return res.redirect("/connexion/linked");
     }
   });
 

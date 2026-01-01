@@ -1,0 +1,10 @@
+{
+  "name": "shop",
+  "version": "1.0.0",
+  "description": "Store Management System",
+  "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-shop/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-shop/tree/main"
+  },
+  "dependsOn": []
+}

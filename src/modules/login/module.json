@@ -1,7 +1,7 @@
 {
   "name": "login",
   "version": "1.0.0",
-  "description": "Page connexion + redirection OAuth Discord",
+  "description": "Connection Management System",
   "update": {
     "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-login/main/VERSION",
     "repoUrl": "https://github.com/Guildee-Discord/Module-login/tree/main"

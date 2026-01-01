@@ -1,5 +1,4 @@
 <!doctype html>
-<html lang="fr">
 
 <head>
   <meta charset="UTF-8" />
@@ -12,652 +11,69 @@
   <% } %>
   <script src="https://cdn.tailwindcss.com"></script>
   <%- include(coreView("partials/icons/font-awesome")) %>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800&display=swap');
-
-    :root {
-      /* Une seule couleur pilotée par config.json */
-      --primary: <%=(config?.color || config?.colors) %>;
-
-      /* Alias utilisé partout */
-      --accent: var(--primary);
-
-      /* Dérivées automatiques */
-      --secondary: color-mix(in srgb, var(--primary) 70%, #ffffff 30%);
-
-      /* Base plus claire (au lieu d'un gris "très sombre" partout) */
-      --dark: #2a2d35;
-      --darker: #121420;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Exo 2', sans-serif;
-      overflow-x: hidden;
-
-      /* Plus clair que avant -> le site respire davantage */
-      background: var(--darker);
-    }
-
-    h1,
-    h2,
-    h3,
-    .logo-text {
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    /* Dark animated background (moins sombre, plus lumineux) */
-    .animated-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-
-      /* Avant: très noir. Maintenant: un peu plus “bleu nuit” et lisible */
-      background: radial-gradient(ellipse at bottom, #171a26 0%, #07070b 100%);
-      z-index: -1;
-    }
-
-    .animated-bg::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-
-      /* Accent un poil plus présent pour "éclairer" le fond */
-      background:
-        radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 45%),
-        radial-gradient(circle at 85% 80%, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 55%);
-      animation: pulse 8s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 0.45;
-      }
-
-      50% {
-        opacity: 0.85;
-      }
-    }
-
-    /* Subtle grid (plus discret mais présent) */
-    .grid-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image:
-        linear-gradient(color-mix(in srgb, var(--primary) 4%, transparent) 1px, transparent 1px),
-        linear-gradient(90deg, color-mix(in srgb, var(--primary) 4%, transparent) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 1;
-
-      /* Avant 0.3: ça assombrit parfois + bruit visuel. Ici plus clean */
-      opacity: 0.22;
-    }
-
-    /* Navbar (un poil moins opaque pour laisser respirer) */
-    .navbar {
-      backdrop-filter: blur(20px) saturate(180%);
-      background: rgba(8, 8, 14, 0.82);
-      border-bottom: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
-    }
-
-    .nav-link {
-      position: relative;
-      transition: all 0.3s ease;
-      color: rgba(255, 255, 255, 0.78);
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-    }
-
-    .nav-link:hover {
-      color: var(--accent);
-    }
-
-    /* Hero section (banner plus visible) */
-    .hero-section {
-      min-height: 100vh;
-      position: relative;
-      overflow: hidden;
-
-      /* Avant trop noir. Maintenant: plus lumineux + contrast propre */
-      background: linear-gradient(180deg,
-          rgba(0, 0, 0, 0.55) 0%,
-          rgba(12, 13, 20, 0.82) 100%);
-    }
-
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1920&q=80') center/cover no-repeat;
-
-      /* Avant 0.15 -> trop faible. Ici plus visible */
-      opacity: 0.28;
-      z-index: -1;
-
-      /* Petit boost de lisibilité */
-      filter: contrast(1.08) saturate(1.1) brightness(1.02);
-      transform: scale(1.02);
-    }
-
-    /* Overlay léger pour éviter que le texte se perde, tout en gardant l'image visible */
-    .hero-section::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background:
-        radial-gradient(800px 500px at 50% 25%, rgba(255,255,255,0.06) 0%, transparent 60%),
-        radial-gradient(900px 700px at 20% 60%, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 65%),
-        linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%);
-      pointer-events: none;
-    }
-
-    /* Modern gradient text */
-    .cyber-text {
-      background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Sleek glow */
-    .neon-glow {
-      box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 30%, transparent);
-    }
-
-    /* Modern card (un chouïa plus lisible) */
-    .cyber-card {
-      background: linear-gradient(135deg, rgba(18, 18, 28, 0.72) 0%, rgba(12, 12, 18, 0.84) 100%);
-      backdrop-filter: blur(10px);
-      border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .cyber-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 12%, transparent), transparent);
-      transition: left 0.6s ease;
-    }
-
-    .cyber-card:hover {
-      border-color: color-mix(in srgb, var(--primary) 55%, transparent);
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px color-mix(in srgb, var(--primary) 20%, transparent);
-    }
-
-    .cyber-card:hover::before {
-      left: 100%;
-    }
-
-    /* Stats */
-    .stat-number {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--accent);
-      text-shadow: 0 0 20px color-mix(in srgb, var(--primary) 50%, transparent);
-      line-height: 1;
-      letter-spacing: 0.02em;
-    }
-
-    /* Button */
-    .cyber-btn {
-      position: relative;
-      background: linear-gradient(135deg,
-          color-mix(in srgb, var(--primary) 12%, transparent),
-          color-mix(in srgb, var(--primary) 18%, transparent));
-      border: 2px solid var(--accent);
-      color: var(--accent);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      will-change: transform;
-    }
-
-    .cyber-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 30%, transparent), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .cyber-btn:hover::before {
-      left: 100%;
-    }
-
-    .cyber-btn:hover {
-      background: color-mix(in srgb, var(--primary) 24%, transparent);
-      box-shadow: 0 0 30px color-mix(in srgb, var(--primary) 40%, transparent);
-      transform: translateY(-2px);
-    }
-
-    /* Job cards */
-    .job-card {
-      background: rgba(18, 18, 28, 0.62);
-      border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .job-card::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--primary) 12%, transparent);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .job-card:hover::after {
-      width: 300px;
-      height: 300px;
-    }
-
-    .job-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 25px color-mix(in srgb, var(--primary) 30%, transparent);
-      transform: scale(1.05);
-    }
-
-    /* Float animation */
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0px);
-      }
-
-      50% {
-        transform: translateY(-15px);
-      }
-    }
-
-    .float-anim {
-      animation: float 3s ease-in-out infinite;
-    }
-
-    /* Mobile menu */
-    .mobile-menu {
-      backdrop-filter: blur(20px) saturate(180%);
-      background: rgba(8, 8, 14, 0.92);
-      border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-14px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .mobile-menu-open {
-      animation: slideDown 0.25s ease forwards;
-    }
-
-    /* Scanlines removed for cleaner look */
-    .scanlines {
-      display: none;
-    }
-
-    /* Smooth anchor scroll offset (navbar height) */
-    section {
-      scroll-margin-top: 96px;
-    }
-
-    /* Divider glow line */
-    .glow-line {
-      height: 1px;
-      width: 100%;
-      background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 50%, transparent), transparent);
-      opacity: 0.6;
-    }
-
-    /* === Responsive polish (no visual redesign, just cleaner scaling) === */
-    @media (max-width: 640px) {
-      .stat-number {
-        font-size: 2.25rem;
-      }
-
-      /* Mobile: le hero était trop sombre -> on boost encore un peu l'image */
-      .hero-section::before {
-        opacity: 0.34;
-        filter: contrast(1.08) saturate(1.12) brightness(1.05);
-      }
-
-      .hero-section::after {
-        background:
-          radial-gradient(700px 420px at 50% 18%, rgba(255,255,255,0.075) 0%, transparent 60%),
-          radial-gradient(800px 650px at 20% 65%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 68%),
-          linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.50) 100%);
-      }
-    }
-
-    /* Prevent code samples from overflowing on small screens */
-    code {
-      word-break: break-all;
-    }
-
-    /* === Tailwind hex overrides -> piloté par --accent (config) === */
-    /* Text */
-    .text-\[\<%= config.color %>\],
-    .text-\[\#D4AF37\] {
-      color: var(--accent) !important;
-    }
-
-    /* Border */
-    .border-\[\<%= config.color %>\] {
-      border-color: var(--accent) !important;
-    }
-
-    .border-\[\<%= config.color %>\]\/20 {
-      border-color: color-mix(in srgb, var(--accent) 20%, transparent) !important;
-    }
-
-    .border-\[\<%= config.color %>\]\/30 {
-      border-color: color-mix(in srgb, var(--accent) 30%, transparent) !important;
-    }
-
-    /* Background */
-    .bg-\[\<%= config.color %>\]\/10 {
-      background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important;
-    }
-
-    /* Hover background used in multiple places */
-    .hover\:bg-\[\<%= config.color %>\]\/10:hover {
-      background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important;
-    }
-
-    /* Gradients (Tailwind uses CSS variables for gradient stops) */
-    .from-\[\<%= config.color %>\] {
-      --tw-gradient-from: var(--accent) !important;
-      --tw-gradient-to: color-mix(in srgb, var(--accent) 0%, transparent) !important;
-      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
-    }
-
-    .to-\[\#0099cc\] {
-      --tw-gradient-to: var(--secondary) !important;
-    }
-
-    /* Fallback for any element explicitly set to the old accent in custom utilities */
-    .text-\[\<%= config.color %>\]\/70 {
-      color: color-mix(in srgb, var(--accent) 70%, transparent) !important;
-    }
-  </style>
+  <%- include(coreView("partials/theme/theme")) %>
 </head>
 
 <body class="bg-black text-white">
-  <!-- Animated background -->
   <div class="animated-bg"></div>
   <div class="grid-overlay"></div>
   <div class="scanlines"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        <!-- Logo -->
-        <div class="flex items-center space-x-3 min-w-0">
-          <div class="relative w-14 h-14 shrink-0">
-            <div class="absolute inset-0 bg-gradient-to-br from-[<%= config.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
-            <div class="relative w-14 h-14 rounded-lg border-2 border-[<%= config.color %>] flex items-center justify-center">
-              <span class="text-4xl font-black logo-text cyber-text leading-none"><%= websiteInitial %></span>
-            </div>
-          </div>
-          <div class="min-w-0">
-            <h1 class="text-xl sm:text-2xl font-black logo-text cyber-text tracking-wider truncate"><%= config?.name || "Undefined" %></h1>
-            <p class="text-[10px] sm:text-xs text-[<%= config.color %>] tracking-widest opacity-70">FIVEM SERVER</p>
-          </div>
-        </div>
+  <%- include(coreView("partials/navbar/navbar")) %>
 
-        <!-- Desktop Menu -->
-        <div class="hidden lg:flex items-center space-x-8">
-          <a href="#home" class="nav-link text-sm font-semibold uppercase tracking-wider">Accueil</a>
-          <a href="#features" class="nav-link text-sm font-semibold uppercase tracking-wider">Features</a>
-          <a href="#jobs" class="nav-link text-sm font-semibold uppercase tracking-wider">Métiers</a>
-          <a href="#store" class="nav-link text-sm font-semibold uppercase tracking-wider">Boutique</a>
-          <a href="#rules" class="nav-link text-sm font-semibold uppercase tracking-wider">Règlement</a>
-
-          <div class="flex items-center space-x-3">
-            <!-- Status -->
-            <div class="flex items-center space-x-2 px-4 py-2 rounded-lg border <%= serverDown ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
-              <div class="w-2 h-2 rounded-full animate-pulse <%= serverDown ? 'bg-red-400' : 'bg-green-400' %>"></div>
-              <span id="online-count-desktop" class="text-xs font-bold <%= serverDown ? 'text-red-400' : 'text-green-400' %>">
-                <%= serverDown ? 'SERVEUR HORS LIGNE' : `${onlineCount} EN LIGNE` %>
-              </span>
-            </div>
-
-            <!-- User / Connexion -->
-            <% if (user) { %>
-              <div class="relative">
-                <button id="user-menu-btn" type="button" class="flex items-center gap-3 px-4 py-2 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition" aria-haspopup="menu" aria-expanded="false">
-                  <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center shrink-0">
-                    <% const avatarUrl=user.avatar ? (user.avatar.startsWith("http") ? user.avatar :
-                        `https://cdn.discordapp.com/avatars/${user.discord_id}/${user.avatar}.png?size=64`) : null; %>
-                    <% if (avatarUrl) { %>
-                      <img src="<%= avatarUrl %>" alt="Avatar" class="w-full h-full object-cover">
-                    <% } else { %>
-                      <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
-                    <% } %>
-                  </div>
-
-                  <div class="text-left leading-tight min-w-0">
-                    <p class="text-xs text-gray-400">Connecté</p>
-                    <p class="text-sm font-bold text-white truncate max-w-[160px]"><%= user.username || user.name || 'Utilisateur' %></p>
-                  </div>
-
-                  <i class="fa-solid fa-chevron-down text-xs text-[<%= config.color %>]/80"></i>
-                </button>
-
-                <!-- Dropdown -->
-                <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-[<%= config.color %>]/20 bg-black/90 backdrop-blur-xl shadow-xl">
-                  <a href="/profile" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config.color %>]/10 transition">
-                    <i class="fa-solid fa-user text-[<%= config.color %>]"></i>
-                    <span>Mon profil</span>
-                  </a>
-                  <a href="/dashboard" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config.color %>]/10 transition">
-                    <i class="fa-solid fa-gauge-high text-[<%= config.color %>]"></i>
-                    <span>Dashboard</span>
-                  </a>
-                  <div class="h-px bg-white/5 mx-4"></div>
-                  <a href="/connexion/logout" class="flex items-center gap-2 px-4 py-3 text-sm text-red-300 hover:bg-red-500/10 transition">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Déconnexion</span>
-                  </a>
-                </div>
-              </div>
-            <% } else { %>
-              <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
-                <i class="fa-brands fa-discord"></i>
-                <span>Connexion</span>
-              </a>
-            <% } %>
-          </div>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg border-2 border-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition shrink-0" aria-label="Ouvrir le menu">
-          <svg class="w-6 h-6 text-[<%= config.color %>]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden mobile-menu lg:hidden">
-      <div class="px-4 py-6 space-y-4">
-        <a href="#home" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition">Accueil</a>
-        <a href="#features" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition">Features</a>
-        <a href="#jobs" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition">Métiers</a>
-        <a href="#store" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition">Boutique</a>
-        <a href="#rules" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition">Règlement</a>
-
-        <div class="pt-2 space-y-3">
-          <!-- Status (mobile) -->
-          <div class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg border <%= serverDown ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
-            <div class="w-2 h-2 rounded-full animate-pulse <%= serverDown ? 'bg-red-400' : 'bg-green-400' %>"></div>
-            <span id="online-count-mobile" class="text-sm font-bold <%= serverDown ? 'text-red-400' : 'text-green-400' %>">
-              <%= serverDown ? 'SERVEUR HORS LIGNE' : `${onlineCount} JOUEURS EN LIGNE` %>
-            </span>
-          </div>
-
-          <!-- User / Connexion (mobile) -->
-          <% if (user) { %>
-            <div class="p-4 rounded-xl border border-[<%= config.color %>]/20 bg-black/40">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center shrink-0">
-                  <% const avatarUrl=user.avatar ? (user.avatar.startsWith("http") ? user.avatar :
-                        `https://cdn.discordapp.com/avatars/${user.discord_id}/${user.avatar}.png?size=64`) : null; %>
-                  <% if (avatarUrl) { %>
-                    <img src="<%= avatarUrl %>" alt="Avatar" class="w-full h-full object-cover">
-                  <% } else { %>
-                    <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
-                  <% } %>
-                </div>
-                <div class="min-w-0">
-                  <p class="text-xs text-gray-400">Connecté</p>
-                  <p class="text-sm font-bold text-white truncate"><%= user.username || user.name || 'Utilisateur' %></p>
-                </div>
-              </div>
-
-              <div class="mt-4 grid grid-cols-2 gap-3">
-                <a href="/profile" class="px-4 py-3 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition text-sm font-bold text-[<%= config.color %>] inline-flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-user"></i>
-                  <span>Profil</span>
-                </a>
-                <a href="/dashboard" class="px-4 py-3 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition text-sm font-bold text-[<%= config.color %>] inline-flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-gauge-high"></i>
-                  <span>Panel</span>
-                </a>
-                <a href="/connexion/logout" class="col-span-2 px-4 py-3 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/15 transition text-sm font-bold text-red-300 inline-flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                  <span>Déconnexion</span>
-                </a>
-              </div>
-            </div>
-          <% } else { %>
-            <a href="/connexion/auth" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
-              <i class="fa-brands fa-discord"></i>
-              <span>Connexion</span>
-            </a>
-          <% } %>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
   <section id="home" class="hero-section flex items-center justify-center relative pt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center py-16 sm:py-20">
-      <!-- Badge -->
       <div class="inline-flex items-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[<%= config.color %>]/10 border border-[<%= config.color %>]/30 mb-6 sm:mb-8">
         <svg class="w-5 h-5 text-[#D4AF37]" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
         </svg>
         <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/80">
-          Serveur <%= config.freeaccess ? 'Free Access' : 'Whitelist' %>
+          <%= t("home.var1") %> <%= config.freeaccess ? 'Free Access' : 'Whitelist' %>
         </span>
       </div>
 
-      <!-- Main Title -->
       <h1 class="text-5xl sm:text-7xl md:text-9xl font-black mb-4 sm:mb-6 cyber-text leading-[0.95] tracking-tight"><%= config?.name || "Undefined" %></h1>
 
       <div class="space-y-4 mb-10 sm:mb-12">
         <p class="text-base sm:text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto px-1">
-          <%= config?.content?.welcomeSubTitle || "Undefined" %>
+          <%= t("home.var2") %>
         </p>
       </div>
 
-      <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 mb-12 sm:mb-20 max-w-2xl sm:max-w-none mx-auto">
-        <a href="#store" class="cyber-btn px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-base sm:text-lg w-full sm:w-auto inline-flex items-center justify-center">
+        <a href="<%= config.link.store %>" class="cyber-btn px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-base sm:text-lg w-full sm:w-auto inline-flex items-center justify-center">
           <span class="relative z-10 flex items-center justify-center space-x-2">
             <i class="fa-solid fa-shop"></i>
-            <span>Boutique</span>
+            <span><%= t("home.var3") %></span>
           </span>
         </a>
 
-        <a id="discord-cta-hero" href="#" class="px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-base sm:text-lg border-2 border-[<%= config.color %>] text-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition w-full sm:w-auto font-bold uppercase tracking-wider inline-flex items-center justify-center gap-2">
-          <i class="fab fa-discord"></i> Discord
+        <a id="discord-cta-hero" href="<%= config.link.discord %>" class="px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-base sm:text-lg border-2 border-[<%= config.color %>] text-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition w-full sm:w-auto font-bold uppercase tracking-wider inline-flex items-center justify-center gap-2">
+          <i class="fab fa-discord"></i> <%= t("home.var4") %>
         </a>
       </div>
 
-      <!-- Stats -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
         <div class="cyber-card p-6 sm:p-8 rounded-2xl">
-          <div class="stat-number">5K+</div>
-          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm">Joueurs</p>
+          <div class="stat-number"><%= config?.numberPlayers || 0 %></div>
+          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm"><%= t("home.var5") %></p>
         </div>
         <div class="cyber-card p-6 sm:p-8 rounded-2xl">
-          <div class="stat-number">75+</div>
-          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm">Métiers</p>
+          <div class="stat-number"><%= countJob %></div>
+          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm"><%= t("home.var6") %></p>
         </div>
         <div class="cyber-card p-6 sm:p-8 rounded-2xl">
           <div class="stat-number">24/7</div>
-          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm">Support</p>
+          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm"><%= t("home.var7") %></p>
         </div>
         <div class="cyber-card p-6 sm:p-8 rounded-2xl">
-          <div class="stat-number">99.9%</div>
-          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm">Uptime</p>
+          <div class="stat-number"><%= config?.numberStaff || 0 %></div>
+          <p class="text-gray-400 font-semibold mt-2 uppercase tracking-wider text-xs sm:text-sm"><%= t("home.var8") %></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
   <section id="features" class="py-20 sm:py-28 md:py-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 md:mb-20">
@@ -729,7 +145,170 @@
     </div>
   </section>
 
-  <!-- Jobs Section -->
+  <section id="team" class="py-20 sm:py-28 md:py-32 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header / Banner -->
+    <div class="relative overflow-hidden rounded-3xl border border-[<%= config.color %>]/25 bg-black/40 mb-12 sm:mb-16">
+      <div class="absolute inset-0 opacity-40">
+        <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[<%= config.color %>]/20 blur-3xl"></div>
+        <div class="absolute -bottom-28 -left-20 w-80 h-80 rounded-full bg-[#0099cc]/15 blur-3xl"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.12),transparent_55%)]"></div>
+      </div>
+
+      <div class="relative z-10 p-8 sm:p-12 md:p-14">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[<%= config.color %>]/10 border border-[<%= config.color %>]/30 mb-5">
+          <i class="fa-solid fa-users text-[#D4AF37]"></i>
+          <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/80">
+            TEAM • Staff & Développement
+          </span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+          <div class="max-w-3xl">
+            <h2 class="text-4xl sm:text-6xl md:text-7xl font-black cyber-text leading-[0.95]">
+              NOTRE TEAM
+            </h2>
+            <p class="text-gray-400 mt-4 text-base sm:text-xl leading-relaxed">
+              Des humains (presque) normaux : staff actif, devs qui dorment peu, et une vision claire du RP.
+            </p>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <span class="px-4 py-2 rounded-full text-xs sm:text-sm border border-[<%= config.color %>]/25 bg-black/30 text-gray-200">
+                <i class="fa-solid fa-shield-halved text-[<%= config.color %>] mr-2"></i>Modération 24/7
+              </span>
+              <span class="px-4 py-2 rounded-full text-xs sm:text-sm border border-[<%= config.color %>]/25 bg-black/30 text-gray-200">
+                <i class="fa-solid fa-code text-[<%= config.color %>] mr-2"></i>Dév & Optimisation
+              </span>
+              <span class="px-4 py-2 rounded-full text-xs sm:text-sm border border-[<%= config.color %>]/25 bg-black/30 text-gray-200">
+                <i class="fa-solid fa-calendar-days text-[<%= config.color %>] mr-2"></i>Events RP
+              </span>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-[420px]">
+            <div class="p-6 rounded-2xl border border-[<%= config.color %>]/20 bg-black/30">
+              <p class="text-sm text-gray-400">Contact staff :</p>
+              <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                <a href="<%= config.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center justify-center gap-2 w-full">
+                  <i class="fa-brands fa-discord"></i>
+                  <span>Ouvrir un ticket</span>
+                </a>
+                <a href="#rules" class="px-6 py-3 rounded-lg border-2 border-[<%= config.color %>] text-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition font-bold uppercase tracking-wider inline-flex items-center justify-center gap-2 w-full">
+                  <i class="fa-solid fa-scroll"></i>
+                  <span>Règlement</span>
+                </a>
+              </div>
+              <p class="text-xs text-gray-500 mt-3">
+                Astuce : mets ici un lien direct vers ton salon Discord “ticket” / “support”.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glow-line"></div>
+    </div>
+
+    <!-- Team Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+  <% (team || []).forEach((m) => { %>
+    <article class="cyber-card p-6 sm:p-8 rounded-2xl relative overflow-hidden">
+      <div class="absolute inset-0 opacity-30 pointer-events-none">
+        <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[<%= config.color %>]/15 blur-3xl"></div>
+      </div>
+
+      <div class="relative z-10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border border-[<%= config.color %>]/30 bg-black/40 flex items-center justify-center overflow-hidden">
+                <% if (m.avatar) { %>
+                  <img src="<%= m.avatar %>" alt="<%= m.name %>" class="w-full h-full object-cover">
+                <% } else { %>
+                  <i class="fa-solid <%= m.icon || 'fa-user' %> text-2xl text-[<%= config.color %>]"></i>
+                <% } %>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-black text-white leading-tight"><%= m.name %></h3>
+              <p class="text-sm sm:text-base text-gray-400"><%= m.subtitle || "" %></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <% const s = m.socials || {}; %>
+            <% if (s.discord) { %>
+              <a href="<%= s.discord %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                <i class="fa-brands fa-discord text-[<%= config.color %>]"></i>
+              </a>
+            <% } %>
+            <% if (s.github) { %>
+              <a href="<%= s.github %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                <i class="fa-brands fa-github text-[<%= config.color %>]"></i>
+              </a>
+            <% } %>
+            <% if (s.x) { %>
+              <a href="<%= s.x %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                <i class="fa-brands fa-x-twitter text-[<%= config.color %>]"></i>
+              </a>
+            <% } %>
+            <% if (s.tiktok) { %>
+              <a href="<%= s.tiktok %>" target="_blank" class="w-10 h-10 rounded-xl border border-[<%= config.color %>]/20 bg-black/30 hover:bg-[<%= config.color %>]/10 transition inline-flex items-center justify-center">
+                <i class="fa-brands fa-tiktok text-[<%= config.color %>]"></i>
+              </a>
+            <% } %>
+          </div>
+        </div>
+
+        <p class="text-gray-300/90 mt-6 leading-relaxed text-sm sm:text-base"><%= m.bio %></p>
+
+        <div class="mt-6 space-y-3">
+          <% (m.skills || []).forEach(skill => { %>
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="text-gray-400 uppercase tracking-wider font-bold"><%= skill.label %></span>
+              <span class="text-[<%= config.color %>] font-black"><%= skill.value %>%</span>
+            </div>
+            <div class="h-2 rounded-full bg-white/5 border border-white/10 overflow-hidden">
+              <div class="h-full" style="width:<%= skill.value %>%; background-color:<%= config.color %>; opacity:.7;"></div>
+            </div>
+          <% }) %>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <% (m.tags || []).forEach(tag => { %>
+            <span class="px-3 py-1.5 rounded-full text-xs border border-[<%= config.color %>]/20 bg-black/30 text-gray-200">
+              <%= tag %>
+            </span>
+          <% }) %>
+        </div>
+      </div>
+    </article>
+  <% }) %>
+</div>
+
+
+    <!-- Bottom CTA -->
+    <div class="mt-10 sm:mt-16 max-w-4xl mx-auto">
+      <div class="cyber-card p-6 sm:p-10 rounded-2xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-black cyber-text">Envie de rejoindre le staff ?</h3>
+            <p class="text-gray-400 mt-3 leading-relaxed text-sm sm:text-base">
+              Recrutement selon besoins (support, modération, events). Montre que t’es fiable, on parle.
+            </p>
+          </div>
+          <a href="<%= config.link.discord %>" class="cyber-btn px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg inline-flex items-center justify-center gap-2 w-full md:w-auto">
+            <i class="fa-brands fa-discord"></i>
+            <span>Candidater sur Discord</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
   <section id="jobs" class="py-20 sm:py-28 md:py-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 md:mb-20">
@@ -807,7 +386,6 @@
     </div>
   </section>
 
-  <!-- Store Section -->
   <section id="store" class="py-20 sm:py-28 md:py-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 md:mb-20">
@@ -919,7 +497,6 @@
     </div>
   </section>
 
-  <!-- Rules Section -->
   <section id="rules" class="py-20 sm:py-28 md:py-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 md:mb-20">
@@ -1001,60 +578,19 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="relative py-12 sm:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="glow-line mb-8 sm:mb-10"></div>
-
-      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 sm:gap-10">
-        <div class="flex items-center gap-4 min-w-0">
-          <div class="relative w-12 h-12 shrink-0">
-            <div class="absolute inset-0 bg-gradient-to-br from-[<%= config.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
-            <div class="relative w-12 h-12 bg-black rounded-lg border-2 border-[<%= config.color %>] flex items-center justify-center">
-              <span class="text-3xl font-black logo-text cyber-text leading-none">C</span>
-            </div>
-          </div>
-          <div class="min-w-0">
-            <p class="text-lg sm:text-xl font-black logo-text cyber-text tracking-wider truncate">CITY-RP</p>
-            <p class="text-sm text-gray-500">© <span id="year"></span> — Tous droits réservés</p>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-          <a id="footer-discord" href="#" class="cyber-btn px-8 sm:px-10 py-4 rounded-lg inline-flex items-center justify-center gap-2 w-full sm:w-auto">
-            <i class="fa-brands fa-discord"></i>
-            <span>Discord</span>
-          </a>
-          <a id="footer-connect" href="#" class="px-8 sm:px-10 py-4 rounded-lg border-2 border-[<%= config.color %>] text-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition font-bold uppercase tracking-wider inline-flex items-center justify-center gap-2 w-full sm:w-auto">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            <span>Connexion</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="mt-8 sm:mt-10 text-xs text-gray-600 leading-relaxed">
-        <p>
-          <span class="text-gray-500">Note :</span>
-          Remplace les liens “#” par tes vrais liens (Discord, cfx.re, boutique). Tu peux aussi brancher un compteur joueurs réel via API.
-        </p>
-      </div>
-    </div>
-  </footer>
+  <%- include(coreView("partials/footer/footer")) %>
 
   <script>
-    // === CONFIG (remplace ces liens) ===
     const LINKS = {
       discord: "https://discord.gg/xxxx",
       connect: "https://cfx.re/join/xxxxxx",
       store: "https://votre-boutique.example",
-      rules: "https://discord.com/channels/xxxx/xxxx" // optionnel
+      rules: "https://discord.com/channels/xxxx/xxxx"
     };
 
-    // IMPORTANT: éviter une erreur JS qui casse tout le script
     const SERVER_DOWN = <%= serverDown ? 'true' : 'false' %>;
     const ONLINE = SERVER_DOWN ? 0 : <%= Number(onlineCount || 0) %>;
 
-    // Inject links
     const setHref = (id, url) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -1073,14 +609,12 @@
     setHref("connect-cta", LINKS.connect);
     setHref("footer-connect", LINKS.connect);
 
-    // Online count text (mobile uniquement si serveur OK)
     const mobileCount = document.getElementById("online-count-mobile");
     if (mobileCount && !SERVER_DOWN) mobileCount.textContent = `${ONLINE} JOUEURS EN LIGNE`;
 
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    // Mobile menu toggle
     const btn = document.getElementById("mobile-menu-btn");
     const menu = document.getElementById("mobile-menu");
     const menuIcon = document.getElementById("menu-icon");
@@ -1108,13 +642,22 @@
         isHidden ? openMenu() : closeMenu();
       });
 
-      // Close mobile menu when clicking a link
       document.querySelectorAll(".mobile-link").forEach((a) => {
         a.addEventListener("click", () => closeMenu());
       });
+
+      document.addEventListener("click", (e) => {
+        if (menu.classList.contains("hidden")) return;
+        const target = e.target;
+        const clickedInside = menu.contains(target) || btn.contains(target);
+        if (!clickedInside) closeMenu();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
     }
 
-    // Smooth scrolling for internal anchors
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener("click", (e) => {
         const href = anchor.getAttribute("href");
@@ -1129,7 +672,6 @@
       });
     });
 
-    // === FIX MENU USER (dropdown qui ne se ferme pas instant) ===
     const userBtn = document.getElementById("user-menu-btn");
     const userDropdown = document.getElementById("user-menu-dropdown");
 
@@ -1158,7 +700,6 @@
         toggleUserMenu();
       });
 
-      // Click dehors => ferme
       document.addEventListener("click", (e) => {
         if (userDropdown.classList.contains("hidden")) return;
         const target = e.target;
@@ -1166,12 +707,10 @@
         if (!clickedInside) closeUserMenu();
       });
 
-      // ESC => ferme
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeUserMenu();
       });
 
-      // Click sur un item => ferme (optionnel mais agréable)
       userDropdown.querySelectorAll("a").forEach((a) => {
         a.addEventListener("click", () => closeUserMenu());
       });

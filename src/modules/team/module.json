@@ -1,0 +1,10 @@
+{
+  "name": "team",
+  "version": "1.0.0",
+  "description": "Team Management System",
+  "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-team/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-team/tree/main"
+  },
+  "dependsOn": []
+}

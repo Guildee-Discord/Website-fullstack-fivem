@@ -44,7 +44,7 @@ module.exports = (ctx) => {
 
   router.get("/", async (req, res) => {
     const website = config_website.website || {};
-    const themePage = config_page?.theme?.home?.page || "index";
+    const themePage = config_page?.theme?.team?.page || "index";
     const viewsDir = path.join(__dirname, "./views");
     const viewPath = path.join(viewsDir, `${themePage}.ejs`);
     const teamPath = path.join(process.cwd(), "configuration", "team.json");
