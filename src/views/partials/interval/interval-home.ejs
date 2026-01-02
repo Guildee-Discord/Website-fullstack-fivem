@@ -1,0 +1,7 @@
+<% if (req.query.delayRedirect === "1") { %>
+<script>
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 7000);
+</script>
+<% } %>

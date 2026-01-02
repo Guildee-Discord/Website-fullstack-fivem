@@ -21,9 +21,15 @@
 
   <%- include(coreView("partials/navbar/navbar")) %>
 
-  <section id="team" class="py-20 sm:py-28 md:py-32 relative">
+  <section id="team" class="pt-24 pb-20 sm:pt-32 sm:pb-28 md:pt-36 md:pb-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 md:mb-20">
+        <h2 class="text-4xl sm:text-6xl md:text-7xl font-black mb-4 sm:mb-6 cyber-text"><%= t("team.var1") %></h2>
+        <p class="text-lg sm:text-2xl text-gray-400"><%= t("team.var2") %></p>
+      </div>
+
       <!-- Header / Banner -->
+      <% if (config_page.theme.team.HeaderBanner) { %>
       <div class="relative overflow-hidden rounded-3xl border border-[<%= config.color %>]/25 bg-black/40 mb-12 sm:mb-16">
         <div class="absolute inset-0 opacity-40">
           <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[<%= config.color %>]/20 blur-3xl"></div>
@@ -35,29 +41,29 @@
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[<%= config.color %>]/10 border border-[<%= config.color %>]/30 mb-5">
             <i class="fa-solid fa-users text-[#D4AF37]"></i>
             <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/80">
-              Staff • Développement
+              <%= t("team.var3") %>
             </span>
           </div>
 
           <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div class="max-w-3xl">
               <h2 class="text-4xl sm:text-6xl md:text-7xl font-black cyber-text leading-[0.95]">
-                Team <%= config?.name || "Undefined" %>
+                <%= t("team.var4") %> <%= config?.name || "Undefined" %>
               </h2>
               <p class="text-gray-400 mt-4 text-base sm:text-xl leading-relaxed">
-                Des humains (presque) normaux, staff actif, devs qui dorment peu, et une vision claire du RP.
+                <%= t("team.var5") %>
               </p>
 
-   
+
             </div>
 
             <div class="w-full lg:w-[420px]">
               <div class="p-6 rounded-2xl border border-[<%= config.color %>]/20 bg-black/30">
-                <p class="text-sm text-gray-400">Pour ouvrir un ticket, rendez-vous directement sur notre Discord</p>
+                <p class="text-sm text-gray-400"><%= t("team.var6") %></p>
                 <div class="mt-4 flex flex-col sm:flex-row gap-3">
                   <a href="<%= config.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center justify-center gap-2 w-full">
                     <i class="fa-solid fa-ticket"></i>
-                    <span>ticket</span>
+                    <span><%= t("team.var7") %></span>
                   </a>
                 </div>
               </div>
@@ -67,6 +73,7 @@
 
         <div class="glow-line"></div>
       </div>
+      <% } %>
 
       <!-- Team Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -148,22 +155,24 @@
 
 
       <!-- Bottom CTA -->
+      <% if (config_page.theme.team.CTA) { %>
       <div class="mt-10 sm:mt-16 max-w-4xl mx-auto">
         <div class="cyber-card p-6 sm:p-10 rounded-2xl">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
             <div>
-              <h3 class="text-2xl sm:text-3xl font-black cyber-text">Envie de rejoindre le staff ?</h3>
+              <h3 class="text-2xl sm:text-3xl font-black cyber-text"><%= t("team.var8") %></h3>
               <p class="text-gray-400 mt-3 leading-relaxed text-sm sm:text-base">
-                Recrutement selon besoins (support, modération, events). Montre que t’es fiable, on parle.
+                <%= t("team.var9") %>
               </p>
             </div>
             <a href="<%= config.link.discord %>" class="cyber-btn px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg inline-flex items-center justify-center gap-2 w-full md:w-auto">
-              <i class="fa-brands fa-discord"></i>
-              <span>Candidater sur Discord</span>
+              <i class="fa-solid fa-ticket"></i>
+              <span><%= t("team.var10") %></span>
             </a>
           </div>
         </div>
       </div>
+      <% } %>
 
     </div>
   </section>

@@ -31,22 +31,12 @@
 
           <% if (user) { %>
           <div class="relative">
-            <button
-              id="user-menu-btn"
-              type="button"
-              class="flex items-center gap-3 px-4 py-2 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition"
-              aria-haspopup="menu"
-              aria-expanded="false"
-            >
+            <button id="user-menu-btn" type="button" class="flex items-center gap-3 px-4 py-2 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition" aria-haspopup="menu" aria-expanded="false">
               <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center shrink-0 relative">
                 <% if (user.avatarURL && user.avatarURL()) { %>
                 <img src="<%= user.avatarURL() %>" alt="<%= t('navbar.avatar_alt') %>" class="w-full h-full object-cover">
                 <% if (user.avatarDecorationData?.asset) { %>
-                <img
-                  src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256"
-                  alt="<%= t('navbar.decoration_alt') %>"
-                  class="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                >
+                <img src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256" alt="<%= t('navbar.decoration_alt') %>" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
                 <% } %>
                 <% } else { %>
                 <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
@@ -78,19 +68,22 @@
             </div>
           </div>
           <% } else { %>
+          <% if (config_modules.login) { %>
           <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
             <i class="fa-brands fa-discord"></i>
             <span><%= t("navbar.login") %></span>
           </a>
+          <% } else { %>
+          <a href="<%= config.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
+            <i class="fa-brands fa-discord"></i>
+            <span><%= t("navbar.join") %></span>
+          </a>
+          <% } %>
           <% } %>
         </div>
       </div>
 
-      <button
-        id="mobile-menu-btn"
-        class="lg:hidden p-2 rounded-lg border-2 border-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition shrink-0"
-        aria-label="<%= t('navbar.open_menu') %>"
-      >
+      <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg border-2 border-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition shrink-0" aria-label="<%= t('navbar.open_menu') %>">
         <svg class="w-6 h-6 text-[<%= config.color %>]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -100,7 +93,7 @@
   </div>
 
   <div id="mobile-menu" class="hidden mobile-menu lg:hidden">
-    <div class="px-4 py-6 space-y-4"> 
+    <div class="px-4 py-6 space-y-4">
       <a href="/" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.home") %></a>
       <a href="/team" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.team") %></a>
       <a href="#jobs" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.jobs") %></a>
@@ -122,11 +115,7 @@
               <% if (user.avatarURL && user.avatarURL()) { %>
               <img src="<%= user.avatarURL() %>" alt="<%= t('navbar.avatar_alt') %>" class="w-full h-full object-cover">
               <% if (user.avatarDecorationData?.asset) { %>
-              <img
-                src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256"
-                alt="<%= t('navbar.decoration_alt') %>"
-                class="absolute inset-0 w-full h-full object-cover pointer-events-none"
-              >
+              <img src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256" alt="<%= t('navbar.decoration_alt') %>" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
               <% } %>
               <% } else { %>
               <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
@@ -154,10 +143,17 @@
           </div>
         </div>
         <% } else { %>
+        <% if (config_modules.login) { %>
         <a href="/connexion/auth" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
           <i class="fa-brands fa-discord"></i>
           <span><%= t("navbar.login") %></span>
         </a>
+        <% } else { %>
+        <a href="<%= config.link.discord %>" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
+          <i class="fa-brands fa-discord"></i>
+          <span><%= t("navbar.join") %></span>
+        </a>
+        <% } %>
         <% } %>
       </div>
     </div>

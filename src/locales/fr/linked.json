@@ -1,0 +1,21 @@
+{
+  "var1": "Lie ton compte Discord -> FiveM",
+  "var2": "Connecté en tant que",
+  "var3": "Ton ID FiveM",
+  "var4": "Aide",
+  "var5": "Ex: license:xxxxxxxx",
+  "var6": "L’ID doit correspondre exactement à l’<strong>identifier</strong> stocké dans la base MySQL table <strong>`users`</strong>.",
+  "var7": "Exemples valides :",
+  "var8": "license:xxxxxxxx",
+  "var9": "fivem:xxxxxxxx",
+  "var10": "Si l’identifiant ne correspond pas, la liaison sera refusée. Pour l’obtenir, contacte un administrateur du serveur sur lequel tu joues.",
+  "var11": "Lier mon compte",
+  "var12": "Utilisateur Discord introuvable",
+  "var13": "Ton identifiant FiveM est déjà lié",
+  "var14": "Ton identifiant FiveM est invalide",
+  "var15": "Identifiant FiveM introuvable en base",
+  "var16": "Ce compte Discord est déjà lié",
+  "var17": "Impossible de lier ton compte. Réessaie",
+  "var18": "Compte lié avec succès",
+  "var19": "Erreur serveur. Réessaie dans un moment\n\n{err}"
+}

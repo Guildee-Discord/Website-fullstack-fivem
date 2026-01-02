@@ -17,7 +17,6 @@ module.exports = {
     const logsDir = path.join(process.cwd(), "logs");
     const fileLogger = createFileLogger({ baseDir: logsDir });
     ctx.fileLogs = fileLogger;
-    fileLogger.info("ℹ️ Module logs initialisé");
 
     const urls = config_webhook?.webhooks?.url || {};
     const customs = config_webhook?.webhooks?.custom || {};

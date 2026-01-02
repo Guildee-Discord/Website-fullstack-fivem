@@ -1,0 +1,33 @@
+Guildee Public Use License (GPUL) v1.0
+
+Copyright © 2026 Guildee. All rights reserved.
+
+Permission is hereby granted to any person obtaining a copy of this software
+and associated documentation files (the "Software") to use the Software for
+public or private projects, including production use.
+
+The following conditions must be respected:
+
+1. Attribution  
+   You may not claim authorship of the Software or any derivative work.
+   Original copyright notices and credits must remain visible.
+
+2. Redistribution  
+   You may not redistribute the Software or any derivative work as your own
+   project, whether for free or for a fee, without explicit written permission
+   from the copyright holder.
+
+3. Source Re-publication  
+   Publishing the source code, in whole or in part, outside of this repository
+   is prohibited unless authorized by the copyright holder.
+
+4. Commercialization  
+   Selling the Software or any derivative work is strictly forbidden.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

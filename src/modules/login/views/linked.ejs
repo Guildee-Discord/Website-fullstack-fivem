@@ -14,6 +14,7 @@
   <%- include(coreView("partials/icons/font-awesome")) %>
   <%- include(coreView("partials/toast/toast")) %>
   <%- include(coreView("partials/theme/theme")) %>
+  <%- include(coreView("partials/interval/interval-home")) %>
 </head>
 
 <body class="bg-black text-white">
@@ -22,11 +23,12 @@
   <div class="scanlines"></div>
   <%- include(coreView("partials/navbar/navbar")) %>
 
-  <section id="link" class="relative pt-28 pb-16">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <section id="link" class="relative pt-28 pb-16 min-h-[calc(100vh-7rem)] flex items-center">
+    <div class="max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="cyber-card rounded-2xl p-6 sm:p-10">
         <div class="flex items-center gap-4 mb-6">
-          <div class="w-12 h-12 rounded-xl border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center overflow-hidden">
+          <div
+            class="w-12 h-12 rounded-xl border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center overflow-hidden">
             <% if (user.avatarURL()) { %>
             <img src="<%= user.avatarURL() %>" alt="Avatar" class="w-full h-full object-cover">
             <% } else { %>
@@ -37,9 +39,9 @@
           </div>
 
           <div class="min-w-0">
-            <h2 class="text-2xl sm:text-3xl font-black logo-text cyber-text">Lie ton compte Discord -> FiveM</h2>
+            <h2 class="text-2xl sm:text-3xl font-black logo-text cyber-text"><%= t("linked.var1") %></h2>
             <p class="text-gray-400 text-sm sm:text-base">
-              Connecté en tant que <span class="text-white font-bold"><%= user.username %></span>
+              <%= t("linked.var2") %> <span class="text-white font-bold"><%= user.username %></span>
             </p>
           </div>
         </div>
@@ -60,35 +62,41 @@
 
         <form method="POST" action="/connexion/linked" class="space-y-5">
           <div>
-            <label for="fivem_id" class="flex items-center justify-between text-sm font-bold uppercase tracking-wider text-white/80 mb-2">
-              <span>Ton ID FiveM</span>
+            <label for="fivem_id"
+              class="flex items-center justify-between text-sm font-bold uppercase tracking-wider text-white/80 mb-2">
+              <span><%= t("linked.var3") %></span>
               <button type="button" id="help-toggle" class="text-[<%= config.color %>] text-xs flex items-center gap-1">
                 <i class="fa-solid fa-circle-question"></i>
-                <span>Aide</span>
+                <span><%= t("linked.var4") %></span>
               </button>
             </label>
 
-            <input id="fivem_id" name="fivem_id" type="text" required autocomplete="off" placeholder="Ex: license:xxxxxxxx" class="w-full px-4 py-4 rounded-xl bg-black/40 border border-[<%= config.color %>]/25 focus:outline-none focus:ring-2 focus:ring-[<%= config.color %>]/40 focus:border-[<%= config.color %>]/60 text-white placeholder:text-gray-500" />
+            <input id="fivem_id" name="fivem_id" type="text" required autocomplete="off"
+              placeholder="<%= t("linked.var5") %>"
+              class="w-full px-4 py-4 rounded-xl bg-black/40 border border-[<%= config.color %>]/25 focus:outline-none focus:ring-2 focus:ring-[<%= config.color %>]/40 focus:border-[<%= config.color %>]/60 text-white placeholder:text-gray-500" />
 
-            <div id="help-box" class="hidden mt-3 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-xs leading-relaxed">
+            <!-- HELP BOX AGRANDIE -->
+            <div id="help-box"
+              class="hidden mt-4 p-5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-sm leading-relaxed space-y-2">
               <p>
                 <i class="fa-solid fa-circle-info mr-1"></i>
-                L’ID doit correspondre exactement à l’<strong>identifier</strong> stocké dans la base MySQL table `users`.
+                <%- t("linked.var6") %>
               </p>
-              <p class="mt-1">
-                Exemples valides :
-                <code class="text-amber-300">license:xxxxxxxx</code>,
-                <code class="text-amber-300">fivem:xxxxxxxx</code>
+              <p>
+                <%- t("linked.var7") %>
+                <code class="text-amber-300 text-sm"><%- t("linked.var8") %></code>,
+                <code class="text-amber-300 text-sm"><%- t("linked.var9") %></code>
               </p>
-              <p class="mt-1 text-amber-300/80">
-                Si l’identifiant ne correspond pas, la liaison sera refusée pour l'obtenir il faut contacter un administrateur du serveur sur lequel vous jouez.
+              <p class="text-amber-300/80">
+                <%- t("linked.var10") %>
               </p>
             </div>
           </div>
 
-          <button type="submit" class="cyber-btn w-full px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2">
+          <button type="submit"
+            class="cyber-btn w-full px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2">
             <i class="fa-solid fa-link"></i>
-            <span>Lier mon compte</span>
+            <span><%- t("linked.var11") %></span>
           </button>
         </form>
       </div>
@@ -105,8 +113,6 @@
       });
     }
   </script>
-
-  <%- include(coreView("partials/footer/footer")) %>
 </body>
 
 </html>

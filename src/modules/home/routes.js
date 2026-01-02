@@ -124,6 +124,7 @@ module.exports = (ctx) => {
       const count = Object.keys(data.job).length
 
       res.render(themePage, {
+        req,
         team,
         countJob: count || 0,
         req,

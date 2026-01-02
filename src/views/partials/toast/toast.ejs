@@ -29,13 +29,13 @@
   .toast {
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-width: 260px;
-    max-width: 360px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.4;
+    gap: 18px;
+    min-width: 280px;
+    max-width: 420px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    line-height: 1.6;
     color: #fff;
     backdrop-filter: blur(6px);
     background: rgba(40, 40, 40, 0.85);
@@ -47,8 +47,23 @@
   }
 
   .toast-icon {
-    font-size: 18px;
+    font-size: 40px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  }
+
+  .toast-icon i {
+    opacity: 0.95;
+  }
+
+  .toast-message {
+    font-size: 16px;
+    font-weight: 500;
   }
 
   .toast-success {
@@ -67,11 +82,6 @@
     background: linear-gradient(135deg, #ef6c00, #fb8c00);
   }
 
-  .toast-icon i {
-    font-size: 18px;
-    opacity: 0.9;
-  }
-
   @keyframes toast-in {
     to {
       opacity: 1;
@@ -88,6 +98,20 @@
 </style>
 
 <script>
+  document.querySelectorAll(".toast-message").forEach(msg => {
+    const len = msg.innerText.length;
+
+    if (len > 120) {
+      msg.style.fontSize = "14px";
+      msg.style.lineHeight = "1.45";
+    }
+
+    if (len > 200) {
+      msg.style.fontSize = "13px";
+      msg.style.lineHeight = "1.4";
+    }
+  });
+
   setTimeout(() => {
     document.querySelectorAll(".toast").forEach(t => t.remove());
   }, 4300);

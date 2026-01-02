@@ -1,17 +1,4 @@
-══════════════════════════════════════
-📡  GUIDE — WEBHOOKS DISCORD MODULES
-══════════════════════════════════════
-
-Objectif :
-→ Gérer plusieurs webhooks Discord (logs, login, admin, etc.)
-→ Les initialiser dans un seul module
-→ Les utiliser proprement depuis tous les autres modules
-
-──────────────────────────────────────
-⚙️  1) Configuration
-──────────────────────────────────────
-
-Fichier : configuration/webhook.json
+📁 configuration/webhook.json
 
 {
   "webhooks": {
@@ -37,126 +24,90 @@ Fichier : configuration/webhook.json
   }
 }
 
-🔎 Clés :
-- webhooks.url.<nom>       → URL du webhook
-- webhooks.custom.<nom>.username
-- webhooks.custom.<nom>.avatar_url
+────────────────────────────────────────────────────
 
-──────────────────────────────────────
-🧠  2) Container – Signal de disponibilité
-──────────────────────────────────────
+🔧 Accès aux valeurs
 
-Dans createContainer(config) :
+- webhooks.url.<nom>               → URL du webhook
+- webhooks.custom.<nom>.username   → Nom affiché du webhook
+- webhooks.custom.<nom>.avatar_url → Avatar du webhook
 
-- ctx.webhooks = null
-- ctx.webhooksReady = Promise
-- ctx._resolveWebhooksReady = resolve
+────────────────────────────────────────────────────
 
-🎯 But :
-→ Tous les modules peuvent faire :
+🧠 Initialisation dans createContainer(config)
 
-    await ctx.webhooksReady;
+ctx.webhooks = null;
 
-→ Plus jamais de :
-  "Cannot read properties of null"
+ctx.webhooksReady = new Promise(resolve => {
+  ctx._resolveWebhooksReady = resolve;
+});
 
-──────────────────────────────────────
-🧩  3) Module logs – Initialisation globale
-──────────────────────────────────────
+→ Une fois les webhooks chargés :
+ctx._resolveWebhooksReady();
 
-Le module logs :
-✔ lit configuration/webhook.json  
-✔ crée un client par nom (logs, login, admin…)  
-✔ expose tout dans ctx.webhooks
+────────────────────────────────────────────────────
 
-Résultat attendu :
-
-ctx.webhooks = {
-  logs:  { send, log },
-  login: { send, log },
-  admin: { send, log }
-}
-
-IMPORTANT :
-- ctx._resolveWebhooksReady(true)  → quand prêt
-- ctx._resolveWebhooksReady(false) → si aucun webhook
-
-──────────────────────────────────────
-🚀  4) Utilisation dans les autres modules
-──────────────────────────────────────
+⏳ Utilisation dans tous les modules
 
 Toujours commencer par :
+await ctx.webhooksReady;
 
-    await ctx.webhooksReady;
+Vérifier la disponibilité :
 
-Vérifier :
+if (!ctx.webhooks?.login?.send) {
+  ctx.logger?.warn?.("[login] webhook non prêt");
+  return;
+}
 
-    if (!ctx.webhooks?.login?.send) {
-      ctx.logger?.warn?.("[login] webhook non prêt");
-      return;
-    }
+────────────────────────────────────────────────────
 
-Envoyer un message simple :
+✉️ Envoyer un message simple
 
-    try {
-      await ctx.webhooks.login.send({
-        content: "✅ Module Login démarré"
-      });
-    } catch (e) {
-      ctx.logger?.warn?.("[login] webhook error: " + (e.message || String(e)));
-    }
+try {
+  await ctx.webhooks.login.send({
+    content: "✅ Module Login démarré"
+  });
+} catch (e) {
+  ctx.logger?.warn?.("[login] webhook error: " + (e.message || String(e)));
+}
 
-Envoyer un log embed :
+────────────────────────────────────────────────────
 
-    try {
-      await ctx.webhooks.login.log({
-        level: "success",
-        title: "Module Login",
-        message: "Démarré correctement",
-        fields: [
-          { name: "Serveur", value: "prod-1", inline: true },
-          { name: "Port", value: "3000", inline: true }
-        ]
-      });
-    } catch (e) {
-      ctx.logger?.warn?.("[login] webhook log error: " + (e.message || String(e)));
-    }
+📦 Envoyer un log embed
 
-──────────────────────────────────────
-🗂️  5) Ajouter un nouveau webhook
-──────────────────────────────────────
+try {
+  await ctx.webhooks.login.log({
+    level: "success",
+    title: "Module Login",
+    message: "Démarré correctement",
+    fields: [
+      { name: "Serveur", value: "prod-1", inline: true },
+      { name: "Port", value: "3000", inline: true }
+    ]
+  });
+} catch (e) {
+  ctx.logger?.warn?.("[login] webhook log error: " + (e.message || String(e)));
+}
 
-1. Ajouter dans configuration/webhook.json :
+────────────────────────────────────────────────────
 
-    webhooks.url.staff
-    webhooks.custom.staff
+➕ Ajouter un nouveau webhook
 
-2. Utiliser :
+Dans configuration/webhook.json :
 
-    ctx.webhooks.staff.send(...)
-    ctx.webhooks.staff.log(...)
+- webhooks.url.staff
+- webhooks.custom.staff
 
-──────────────────────────────────────
-⚠️  6) Problèmes courants
-──────────────────────────────────────
+────────────────────────────────────────────────────
 
-❌ Cannot read properties of null  
-→ Tu as oublié : await ctx.webhooksReady;
-
-❌ UnhandledPromiseRejection  
-→ Tu n’as pas mis try/catch autour de send/log
-
-❌ Rien ne s’envoie  
-→ URL invalide / webhook supprimé / token faux
-
-──────────────────────────────────────
-📌  7) Exemple minimal
-──────────────────────────────────────
+🧪 Test rapide
 
 await ctx.webhooksReady;
 
 try {
-  await ctx.webhooks?.logs?.send?.({ content: "Hello webhook 👋" });
+  await ctx.webhooks?.logs?.send?.({
+    content: "Hello webhook 👋"
+  });
 } catch (e) {
   ctx.logger?.warn?.("Webhook error: " + (e.message || String(e)));
 }

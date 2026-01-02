@@ -1,0 +1,21 @@
+{
+  "var1": "Link your Discord account -> FiveM",
+  "var2": "Logged in as",
+  "var3": "Your FiveM ID",
+  "var4": "Help",
+  "var5": "e.g.: license:xxxxxxxx",
+  "var6": "The ID must exactly match the <strong>identifier</strong> stored in the MySQL database table <strong>`users`</strong>.",
+  "var7": "Valid examples:",
+  "var8": "license:xxxxxxxx",
+  "var9": "fivem:xxxxxxxx",
+  "var10": "If the identifier does not match, the link will be refused. To obtain it, contact an administrator of the server you play on.",
+  "var11": "Link my account",
+  "var12": "Discord user not found",
+  "var13": "Your FiveM identifier is already linked",
+  "var14": "Your FiveM identifier is invalid",
+  "var15": "FiveM identifier not found in database",
+  "var16": "This Discord account is already linked",
+  "var17": "Unable to link your account. Please try again",
+  "var18": "Account successfully linked",
+  "var19": "Server error. Please try again later\n\n{err}"
+}
