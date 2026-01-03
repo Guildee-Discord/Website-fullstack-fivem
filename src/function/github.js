@@ -45,7 +45,7 @@ async function checkModuleUpdate({ logger, meta, debug = false }) {
   const hint = `${name}`;
 
   if (!versionUrl || !localVersion) {
-    logger?.warn?.(`${tag} ${hint} - infos version manquantes`);
+    logger?.warn?.(`${tag} ${hint} - missing version information`);
     return;
   }
 
@@ -60,20 +60,20 @@ async function checkModuleUpdate({ logger, meta, debug = false }) {
     }
 
     if (!remoteVersion) {
-      logger?.warn?.(`${tag} ${hint} - VERSION distant vide`);
+      logger?.warn?.(`${tag} ${hint} - remote VERSION is empty`);
       return;
     }
 
     if (remoteVersion === localVersion) {
-      logger?.info?.(`${tag} ${hint} - ${COLOR.GREEN}version à jour${COLOR.RESET} (${localVersion})`);
+      logger?.info?.(`${tag} ${hint} - ${COLOR.GREEN}up to date${COLOR.RESET} (${localVersion})`);
     } else {
       const repoMsg = repoUrl ? ` → ${repoUrl}` : "";
       logger?.warn?.(
-        `${tag} ${hint} - ${COLOR.RESET}nouvelle version disponible${COLOR.RESET} (${COLOR.RED}${localVersion}${COLOR.RESET} → ${COLOR.GREEN}${remoteVersion}${COLOR.RESET})${COLOR.BLUE}${repoMsg}${COLOR.RESET}`
+        `${tag} ${hint} - ${COLOR.RESET}new version available${COLOR.RESET} (${COLOR.RED}${localVersion}${COLOR.RESET} → ${COLOR.GREEN}${remoteVersion}${COLOR.RESET})${COLOR.BLUE}${repoMsg}${COLOR.RESET}`
       );
     }
   } catch (e) {
-    logger?.warn?.(`${tag} ${hint} - impossible de vérifier la version (${e.message})`);
+    logger?.warn?.(`${tag} ${hint} - unable to check version (${e.message})`);
   }
 }
 

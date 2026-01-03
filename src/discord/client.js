@@ -1,5 +1,5 @@
 const { Client, GatewayIntentBits, ActivityType, Events } = require("discord.js");
-const config_bot = require("../../configuration/bot.json");
+const configuration = require("../../configuration/config");
 let client = null;
 
 function toActivityType(type) {
@@ -11,7 +11,7 @@ function toActivityType(type) {
 }
 
 async function initDiscordClient(config) {
-  const botCfg = config_bot.discord || {};
+  const botCfg = configuration.bot || {};
   const enabled = botCfg.enabled !== false;
 
   if (!enabled) return { ok: true, enabled: false };

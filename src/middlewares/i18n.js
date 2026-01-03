@@ -2,21 +2,32 @@ const fs = require("fs");
 const path = require("path");
 
 const LOCALES_ROOT = path.join(__dirname, "..", "locales");
-const CONFIG_PATH = path.join(__dirname, "..", "..", "configuration", "language.json");
+const CONFIG_PATH = path.join(__dirname, "..", "..", "config.js");
 
 let cache = { mtime: 0, dicts: null };
 
-function readLangConfig() {
+function safeLoadAppConfig() {
   try {
-    const raw = fs.readFileSync(CONFIG_PATH, "utf8");
-    const cfg = JSON.parse(raw);
-    return {
-      supported: Array.isArray(cfg.supported) ? cfg.supported : ["fr", "en"],
-      default: cfg.default || "fr",
-    };
+    const resolved = require.resolve(CONFIG_PATH);
+    delete require.cache[resolved];
+    const cfg = require(resolved);
+    return cfg && typeof cfg === "object" ? cfg : {};
   } catch {
-    return { supported: ["fr", "en"], default: "fr" };
+    return {};
   }
+}
+
+function readLangConfig() {
+  const cfg = safeLoadAppConfig();
+  const lang = cfg.language || {};
+
+  const supported =
+    Array.isArray(lang.supported) && lang.supported.length ? lang.supported : ["fr", "en"];
+  const def = typeof lang.default === "string" && lang.default ? lang.default : "fr";
+
+  const defaultLang = supported.includes(def) ? def : supported[0] || "fr";
+
+  return { supported, default: defaultLang };
 }
 
 function isJson(file) {
@@ -34,6 +45,14 @@ function getLatestMtime(dir) {
   }
 
   return latest;
+}
+
+function getConfigMtime() {
+  try {
+    return fs.statSync(CONFIG_PATH).mtimeMs;
+  } catch {
+    return 0;
+  }
 }
 
 function flatten(obj, prefix = "", out = {}) {
@@ -62,7 +81,10 @@ function loadLang(lang) {
 
       if (!entry.isFile() || !isJson(full)) continue;
 
-      const rel = path.relative(baseDir, full).replace(/\\/g, "/").replace(/\.json$/i, "");
+      const rel = path
+        .relative(baseDir, full)
+        .replace(/\\/g, "/")
+        .replace(/\.json$/i, "");
       const prefix = rel.split("/").join(".");
 
       try {
@@ -83,7 +105,7 @@ function loadLang(lang) {
 }
 
 function loadAll() {
-  const mtime = getLatestMtime(LOCALES_ROOT);
+  const mtime = Math.max(getLatestMtime(LOCALES_ROOT), getConfigMtime());
   if (cache.dicts && cache.mtime === mtime) return cache.dicts;
 
   const { supported } = readLangConfig();
@@ -106,7 +128,6 @@ function pickLang(req) {
   return cfg.default;
 }
 
-
 module.exports = function i18n() {
   return (req, res, next) => {
     const dicts = loadAll();
@@ -121,9 +142,12 @@ module.exports = function i18n() {
     };
 
     res.locals.t = (key, vars = {}) => {
-      let str = dicts[lang]?.[key] ?? dicts[readLangConfig().default]?.[key] ?? key;
+      const { default: def } = readLangConfig();
+      let str = dicts[lang]?.[key] ?? dicts[def]?.[key] ?? key;
       str = String(str);
-      for (const [k, v] of Object.entries(vars)) str = str.replaceAll(`{${k}}`, String(v));
+      for (const [k, v] of Object.entries(vars)) {
+        str = str.replaceAll(`{${k}}`, String(v));
+      }
       return str;
     };
 

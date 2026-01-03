@@ -5,15 +5,15 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div class="flex items-start gap-4 min-w-0">
           <div class="relative w-12 h-12 shrink-0">
-            <div class="absolute inset-0 bg-gradient-to-br from-[<%= config.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
-            <div class="relative w-12 h-12 rounded-lg border-2 border-[<%= config.color %>] flex items-center justify-center">
-              <span class="text-3xl font-black logo-text cyber-text leading-none"><%= websiteInitial || "C" %></span>
+            <div class="absolute inset-0 bg-gradient-to-br from-[<%= config_global.app.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
+            <div class="relative w-12 h-12 rounded-lg border-2 border-[<%= config_global.app.color %>] flex items-center justify-center">
+              <span class="text-3xl font-black logo-text cyber-text leading-none"><%= global_initial_name %></span>
             </div>
           </div>
 
           <div class="min-w-0">
             <p class="text-lg sm:text-xl font-black logo-text cyber-text tracking-wider truncate">
-              <%= config?.name %>
+              <%= config_global.app.name %>
             </p>
             <p class="text-sm text-gray-500 mt-1">
               Serveur FiveM • RP sérieux • Communauté active
@@ -49,13 +49,13 @@
           </div>
 
           <div class="mt-5 space-y-3">
-            <a href="#" class="w-full px-5 py-3 rounded-lg border border-white/10 hover:border-[<%= config.color %>]/50 hover:bg-[<%= config.color %>]/10 transition text-sm font-semibold text-gray-200 inline-flex items-center justify-between">
+            <a href="#" class="w-full px-5 py-3 rounded-lg border border-white/10 hover:border-[<%= config_global.app.color %>]/50 hover:bg-[<%= config_global.app.color %>]/10 transition text-sm font-semibold text-gray-200 inline-flex items-center justify-between">
               <span>Accéder au Discord</span>
-              <i class="fa-solid fa-arrow-right text-[<%= config.color %>]"></i>
+              <i class="fa-solid fa-arrow-right text-[<%= config_global.app.color %>]"></i>
             </a>
-            <a href="#rules" class="w-full px-5 py-3 rounded-lg border border-white/10 hover:border-[<%= config.color %>]/50 hover:bg-[<%= config.color %>]/10 transition text-sm font-semibold text-gray-200 inline-flex items-center justify-between">
+            <a href="#rules" class="w-full px-5 py-3 rounded-lg border border-white/10 hover:border-[<%= config_global.app.color %>]/50 hover:bg-[<%= config_global.app.color %>]/10 transition text-sm font-semibold text-gray-200 inline-flex items-center justify-between">
               <span>Lire le règlement</span>
-              <i class="fa-solid fa-book text-[<%= config.color %>]"></i>
+              <i class="fa-solid fa-book text-[<%= config_global.app.color %>]"></i>
             </a>
           </div>
         </div>
@@ -63,7 +63,7 @@
 
       <div class="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <p class="text-sm text-gray-500">
-          © <span id="year"></span> • Créé et géré avec ❤️ par <a href="" class="text-[<%= config.color %>] hover:underline">Guildee</a>
+          Créé et géré avec ❤️ par <a href="" class="text-[<%= config_global.app.color %>] hover:underline">Guildee</a>
         </p>
 
         <div class="flex flex-wrap gap-4 text-sm">

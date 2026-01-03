@@ -12,21 +12,15 @@ function createContainer(config) {
     viewPaths: [],
     logger,
     events: new AppEvents({ logger }),
-
     viewHooks: {
       head: [],
       navbar: [],
       footer: [],
       dashboard: [],
     },
-
-    // Webhooks (sera rempli par le module logs/webhook)
     webhooks: null,
-
-    // Promise résolue quand le module webhook est prêt
     webhooksReady: null,
     _resolveWebhooksReady: null,
-
     middlewares: {
       ensureAuth(req, res, next) {
         try {
@@ -37,7 +31,6 @@ function createContainer(config) {
     },
   };
 
-  // init promise "ready"
   ctx.webhooksReady = new Promise((resolve) => {
     ctx._resolveWebhooksReady = resolve;
   });

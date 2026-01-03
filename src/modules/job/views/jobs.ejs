@@ -1,0 +1,86 @@
+<!doctype html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title><%= config?.name || "Undefined" %></title>
+  <% if (websiteLogo) { %>
+  <link rel="icon" type="image/png" href="<%= websiteLogo %>">
+  <meta property="og:image" content="<%= websiteLogo %>">
+  <meta name="twitter:image" content="<%= websiteLogo %>">
+  <% } %>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <%- include(coreView("partials/icons/font-awesome")) %>
+  <%- include(coreView("partials/theme/theme")) %>
+  <%- include(coreView("partials/interval/interval-home")) %>
+</head>
+
+<body class="bg-black text-white">
+  <div class="animated-bg"></div>
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+
+  <%- include(coreView("partials/navbar/navbar")) %>
+
+  <section id="jobs" class="py-20 sm:py-28 md:py-32 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 md:mb-20">
+        <h2 class="text-4xl sm:text-6xl md:text-7xl font-black mb-4 sm:mb-6 cyber-text">MÉTIERS</h2>
+        <p class="text-lg sm:text-2xl text-gray-400">Choisissez votre voie dans la ville</p>
+      </div>
+
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <% if (jobs && jobs.length) { %>
+        <% jobs.forEach(job => { %>
+        <div class="job-card p-4 sm:p-6 rounded-xl text-center <%= job.whitelisted ? 'opacity-60' : '' %>">
+          <div class="text-4xl sm:text-5xl mb-3 sm:mb-4 float-anim">
+            <%= job.emoji %>
+          </div>
+
+
+          <h3 class="text-base sm:text-lg md:text-xl font-bold text-[<%= config.color %>] relative z-10">
+            <%= job.label || job.name %>
+          </h3>
+
+          <p class="text-gray-400 text-xs sm:text-sm mt-2 relative z-10">
+            <%= job.whitelisted ? 'Métier whitelisted' : 'Métier accessible' %>
+          </p>
+
+          <p class="text-gray-500 text-[10px] sm:text-xs mt-2 relative z-10">
+            ID: <%= job.name %>
+          </p>
+        </div>
+        <% }) %>
+        <% } else { %>
+        <div class="col-span-2 md:col-span-3 lg:col-span-4 text-center text-gray-400">
+          Aucun métier trouvé.
+        </div>
+        <% } %>
+      </div>
+
+
+      <div class="mt-10 sm:mt-16 max-w-4xl mx-auto">
+        <div class="cyber-card p-6 sm:p-10 rounded-2xl">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
+            <div>
+              <h3 class="text-2xl sm:text-3xl font-black cyber-text">Tu veux un métier sur-mesure ?</h3>
+              <p class="text-gray-400 mt-3 leading-relaxed text-sm sm:text-base">
+                Le staff ouvre régulièrement des postes et des business. Propose ton concept et fais-le vivre en RP.
+              </p>
+            </div>
+            <a href="#rules" class="cyber-btn px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg inline-flex items-center justify-center gap-2 w-full md:w-auto">
+              <i class="fa-solid fa-scroll"></i>
+              <span>Voir le Règlement</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include(coreView("partials/footer/footer")) %>
+</body>
+
+</html>

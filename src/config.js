@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { printBox } = require("../src/function/printBox");
 const config_botdiscord = require("../configuration/bot.json");
+const configuration = require("../configuration/config.js");
 
 function fatal(title, lines) {
   const red = "\x1b[31m";
@@ -18,32 +19,31 @@ function fatal(title, lines) {
 }
 
 function loadConfig() {
-  const configPath = path.join(__dirname, "..", "configuration", "config.json");
+  const configPath = path.join(__dirname, "..", "configuration", "config.js");
 
-  // 1) Fichier manquant
+  // 1) Missing file
   if (!fs.existsSync(configPath)) {
-    fatal("Configuration manquante", [
-      `Le fichier \x1b[33mconfiguration/config.json\x1b[0m est introuvable.`,
+    fatal("Missing configuration", [
+      `The file \x1b[33mconfiguration/config.js\x1b[0m cannot be found.`,
       "",
-      "Étapes à suivre :",
-      `1. Copie \x1b[36mconfiguration/config.json.example\x1b[0m`,
-      `   retire le \x1b[35m.example\x1b[0m`,
-      "2. Ouvre-le et complète les informations requises.",
+      "Steps to follow:",
+      `1. Copy \x1b[36mconfiguration/config.js.example\x1b[0m`,
+      "2. Open it and fill in the required information.",
     ]);
   }
 
-  // 2) Lecture / JSON invalide
+  // 2) Load module (invalid JS / runtime error)
   let cfg;
   try {
-    const raw = fs.readFileSync(configPath, "utf8");
-    cfg = JSON.parse(raw);
+    delete require.cache[require.resolve(configPath)];
+    cfg = require(configPath);
   } catch (e) {
-    fatal("Configuration invalide", [
-      `Impossible de lire / parser \x1b[33mconfiguration/config.json\x1b[0m.`,
+    fatal("Invalid configuration", [
+      `Unable to load \x1b[33mconfiguration/config.js\x1b[0m.`,
       "",
-      `Détail : \x1b[31m${e.message}\x1b[0m`,
+      `Details: \x1b[31m${e.message}\x1b[0m`,
       "",
-      "Astuce : vérifie les virgules, guillemets et accolades.",
+      "Tip: check the JS syntax and exports.",
     ]);
   }
 
@@ -53,29 +53,22 @@ function loadConfig() {
   config_botdiscord.discord = config_botdiscord.discord ?? {};
   cfg.website = cfg.website ?? {};
   config_botdiscord.discord.scope = config_botdiscord.discord.scope ?? ["identify"];
+  cfg.configuration = configuration ?? {};
 
-  // 3) Validation des champs requis (collecte toutes les erreurs)
   const missing = [];
-
-  if (!cfg.sessionSecret) missing.push("- sessionSecret manquant");
-  if (!cfg.mysqlUrl) missing.push("- mysqlUrl manquant");
-
-  if (!config_botdiscord.discord.clientID) missing.push("- discord.clientID manquant");
-  if (!config_botdiscord.discord.clientSecret) missing.push("- discord.clientSecret manquant");
-  if (!config_botdiscord.discord.callbackURL) missing.push("- discord.callbackURL manquant");
-
-  // (optionnel) baseUrl/callbackURL cohérence
-  // si tu veux être strict, tu peux vérifier que callbackURL commence par baseUrl
-  // mais je laisse soft pour éviter de bloquer en dev.
-
+  if (!configuration.app?.sessionSecret) missing.push("- missing sessionSecret");
+  if (!configuration.database?.mysqlUrl) missing.push("- missing mysqlUrl");
+  if (!configuration.bot?.clientID) missing.push("- missing discord.clientID");
+  if (!configuration.bot?.clientSecret) missing.push("- missing discord.clientSecret");
+  if (!configuration.bot?.callbackURL) missing.push("- missing discord.callbackURL");
   if (missing.length) {
-    fatal("Configuration incomplète", [
-      `Le fichier \x1b[33mconfiguration/config.json\x1b[0m est présent mais incomplet.`,
+    fatal("Incomplete configuration", [
+      `The file \x1b[33mconfiguration/config.js\x1b[0m exists but is incomplete.`,
       "",
-      "Champs manquants :",
+      "Missing fields:",
       ...missing,
       "",
-      "Corrige le fichier puis relance le serveur.",
+      "Fix the file and restart the server.",
     ]);
   }
 

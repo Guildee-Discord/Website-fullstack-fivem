@@ -1,0 +1,10 @@
+{
+  "name": "job",
+  "version": "1.0.0",
+  "description": "Displays the list of jobs from MySQL on the /jobs page",
+  "update": {
+    "versionUrl": "https://raw.githubusercontent.com/Guildee-Discord/Module-login/main/VERSION",
+    "repoUrl": "https://github.com/Guildee-Discord/Module-login/tree/main"
+  },
+  "dependsOn": []
+}

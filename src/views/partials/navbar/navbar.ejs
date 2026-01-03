@@ -3,14 +3,14 @@
     <div class="flex items-center justify-between h-20">
       <div class="flex items-center space-x-3 min-w-0">
         <div class="relative w-14 h-14 shrink-0">
-          <div class="absolute inset-0 bg-gradient-to-br from-[<%= config.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
-          <div class="relative w-14 h-14 rounded-lg border-2 border-[<%= config.color %>] flex items-center justify-center">
-            <span class="text-4xl font-black logo-text cyber-text leading-none"><%= websiteInitial %></span>
+          <div class="absolute inset-0 bg-gradient-to-br from-[<%= config_global.app.color %>] to-[#0099cc] rounded-lg blur-sm opacity-60"></div>
+          <div class="relative w-14 h-14 rounded-lg border-2 border-[<%= config_global.app.color %>] flex items-center justify-center">
+            <span class="text-4xl font-black logo-text cyber-text leading-none"><%= global_initial_name %></span>
           </div>
         </div>
         <div class="min-w-0">
-          <h1 class="text-xl sm:text-2xl font-black logo-text cyber-text tracking-wider truncate"><%= config?.name || "Undefined" %></h1>
-          <p class="text-[10px] sm:text-xs text-[<%= config.color %>] tracking-widest opacity-70"><%= t("navbar.server_tagline") %></p>
+          <h1 class="text-xl sm:text-2xl font-black logo-text cyber-text tracking-wider truncate"><%= config_global.app.name %></h1>
+          <p class="text-[10px] sm:text-xs text-[<%= config_global.app.color %>] tracking-widest opacity-70"><%= t("navbar.server_tagline") %></p>
         </div>
       </div>
 
@@ -22,24 +22,24 @@
         <a href="#rules" class="nav-link text-sm font-semibold uppercase tracking-wider"><%= t("navbar.rules") %></a>
 
         <div class="flex items-center space-x-3">
-          <div class="flex items-center space-x-2 px-4 py-2 rounded-lg border <%= serverDown ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
-            <div class="w-2 h-2 rounded-full animate-pulse <%= serverDown ? 'bg-red-400' : 'bg-green-400' %>"></div>
-            <span id="online-count-desktop" class="text-xs font-bold <%= serverDown ? 'text-red-400' : 'text-green-400' %>">
-              <%= serverDown ? t("navbar.server_offline") : t("navbar.online_desktop", { count: onlineCount }) %>
+          <div class="flex items-center space-x-2 px-4 py-2 rounded-lg border <%= status_server ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
+            <div class="w-2 h-2 rounded-full animate-pulse <%= status_server ? 'bg-red-400' : 'bg-green-400' %>"></div>
+            <span id="online-count-desktop" class="text-xs font-bold <%= status_server ? 'text-red-400' : 'text-green-400' %>">
+              <%= status_server ? t("navbar.server_offline") : t("navbar.online_desktop", { count: onlineCount }) %>
             </span>
           </div>
 
           <% if (user) { %>
           <div class="relative">
-            <button id="user-menu-btn" type="button" class="flex items-center gap-3 px-4 py-2 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition" aria-haspopup="menu" aria-expanded="false">
-              <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center shrink-0 relative">
+            <button id="user-menu-btn" type="button" class="flex items-center gap-3 px-4 py-2 rounded-lg border border-[<%= config_global.app.color %>]/30 bg-[<%= config_global.app.color %>]/10 hover:bg-[<%= config_global.app.color %>]/15 transition" aria-haspopup="menu" aria-expanded="false">
+              <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[<%= config_global.app.color %>]/40 bg-black/40 flex items-center justify-center shrink-0 relative">
                 <% if (user.avatarURL && user.avatarURL()) { %>
                 <img src="<%= user.avatarURL() %>" alt="<%= t('navbar.avatar_alt') %>" class="w-full h-full object-cover">
                 <% if (user.avatarDecorationData?.asset) { %>
                 <img src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256" alt="<%= t('navbar.decoration_alt') %>" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
                 <% } %>
                 <% } else { %>
-                <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
+                <span class="text-sm font-black text-[<%= config_global.app.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
                 <% } %>
               </div>
 
@@ -48,16 +48,16 @@
                 <p class="text-sm font-bold text-white truncate max-w-[160px]"><%= user.username || user.name || t("navbar.user_fallback") %></p>
               </div>
 
-              <i class="fa-solid fa-chevron-down text-xs text-[<%= config.color %>]/80"></i>
+              <i class="fa-solid fa-chevron-down text-xs text-[<%= config_global.app.color %>]/80"></i>
             </button>
 
-            <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-[<%= config.color %>]/20 bg-black/90 backdrop-blur-xl shadow-xl">
-              <a href="/profile" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config.color %>]/10 transition">
-                <i class="fa-solid fa-user text-[<%= config.color %>]"></i>
+            <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-[<%= config_global.app.color %>]/20 bg-black/90 backdrop-blur-xl shadow-xl">
+              <a href="/profile" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config_global.app.color %>]/10 transition">
+                <i class="fa-solid fa-user text-[<%= config_global.app.color %>]"></i>
                 <span><%= t("navbar.my_profile") %></span>
               </a>
-              <a href="/dashboard" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config.color %>]/10 transition">
-                <i class="fa-solid fa-gauge-high text-[<%= config.color %>]"></i>
+              <a href="/dashboard" class="flex items-center gap-2 px-4 py-3 text-sm text-gray-200 hover:bg-[<%= config_global.app.color %>]/10 transition">
+                <i class="fa-solid fa-gauge-high text-[<%= config_global.app.color %>]"></i>
                 <span><%= t("navbar.dashboard") %></span>
               </a>
               <div class="h-px bg-white/5 mx-4"></div>
@@ -68,13 +68,13 @@
             </div>
           </div>
           <% } else { %>
-          <% if (config_modules.login) { %>
+          <% if (config_global.modules.login) { %>
           <a href="/connexion/auth" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
             <i class="fa-brands fa-discord"></i>
             <span><%= t("navbar.login") %></span>
           </a>
           <% } else { %>
-          <a href="<%= config.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
+          <a href="<%= config_global.app.link.discord %>" class="cyber-btn px-6 py-3 rounded-lg inline-flex items-center gap-2">
             <i class="fa-brands fa-discord"></i>
             <span><%= t("navbar.join") %></span>
           </a>
@@ -83,8 +83,8 @@
         </div>
       </div>
 
-      <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg border-2 border-[<%= config.color %>] hover:bg-[<%= config.color %>]/10 transition shrink-0" aria-label="<%= t('navbar.open_menu') %>">
-        <svg class="w-6 h-6 text-[<%= config.color %>]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg border-2 border-[<%= config_global.app.color %>] hover:bg-[<%= config_global.app.color %>]/10 transition shrink-0" aria-label="<%= t('navbar.open_menu') %>">
+        <svg class="w-6 h-6 text-[<%= config_global.app.color %>]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -94,31 +94,31 @@
 
   <div id="mobile-menu" class="hidden mobile-menu lg:hidden">
     <div class="px-4 py-6 space-y-4">
-      <a href="/" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.home") %></a>
-      <a href="/team" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.team") %></a>
-      <a href="#jobs" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.jobs") %></a>
-      <a href="/shop" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.shop") %></a>
-      <a href="#rules" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config.color %>]/10 border border-transparent hover:border-[<%= config.color %>]/30 transition"><%= t("navbar.rules") %></a>
+      <a href="/" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config_global.app.color %>]/10 border border-transparent hover:border-[<%= config_global.app.color %>]/30 transition"><%= t("navbar.home") %></a>
+      <a href="/team" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config_global.app.color %>]/10 border border-transparent hover:border-[<%= config_global.app.color %>]/30 transition"><%= t("navbar.team") %></a>
+      <a href="#jobs" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config_global.app.color %>]/10 border border-transparent hover:border-[<%= config_global.app.color %>]/30 transition"><%= t("navbar.jobs") %></a>
+      <a href="/shop" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config_global.app.color %>]/10 border border-transparent hover:border-[<%= config_global.app.color %>]/30 transition"><%= t("navbar.shop") %></a>
+      <a href="#rules" class="mobile-link block py-3 px-4 rounded-lg hover:bg-[<%= config_global.app.color %>]/10 border border-transparent hover:border-[<%= config_global.app.color %>]/30 transition"><%= t("navbar.rules") %></a>
 
       <div class="pt-2 space-y-3">
-        <div class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg border <%= serverDown ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
-          <div class="w-2 h-2 rounded-full animate-pulse <%= serverDown ? 'bg-red-400' : 'bg-green-400' %>"></div>
-          <span id="online-count-mobile" class="text-sm font-bold <%= serverDown ? 'text-red-400' : 'text-green-400' %>">
-            <%= serverDown ? t("navbar.server_offline") : t("navbar.online_mobile", { count: onlineCount }) %>
+        <div class="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg border <%= status_server ? 'bg-red-500/20 border-red-500/50' : 'bg-green-500/20 border-green-500/50' %>">
+          <div class="w-2 h-2 rounded-full animate-pulse <%= status_server ? 'bg-red-400' : 'bg-green-400' %>"></div>
+          <span id="online-count-mobile" class="text-sm font-bold <%= status_server ? 'text-red-400' : 'text-green-400' %>">
+            <%= status_server ? t("navbar.server_offline") : t("navbar.online_mobile", { count: onlineCount }) %>
           </span>
         </div>
 
         <% if (user) { %>
-        <div class="p-4 rounded-xl border border-[<%= config.color %>]/20 bg-black/40">
+        <div class="p-4 rounded-xl border border-[<%= config_global.app.color %>]/20 bg-black/40">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[<%= config.color %>]/40 bg-black/40 flex items-center justify-center shrink-0 relative">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[<%= config_global.app.color %>]/40 bg-black/40 flex items-center justify-center shrink-0 relative">
               <% if (user.avatarURL && user.avatarURL()) { %>
               <img src="<%= user.avatarURL() %>" alt="<%= t('navbar.avatar_alt') %>" class="w-full h-full object-cover">
               <% if (user.avatarDecorationData?.asset) { %>
               <img src="https://cdn.discordapp.com/avatar-decoration-presets/<%= user.avatarDecorationData.asset %>.png?size=256" alt="<%= t('navbar.decoration_alt') %>" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
               <% } %>
               <% } else { %>
-              <span class="text-sm font-black text-[<%= config.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
+              <span class="text-sm font-black text-[<%= config_global.app.color %>]"><%= (user.username || user.name || 'U').charAt(0).toUpperCase() %></span>
               <% } %>
             </div>
             <div class="min-w-0">
@@ -128,11 +128,11 @@
           </div>
 
           <div class="mt-4 grid grid-cols-2 gap-3">
-            <a href="/profile" class="px-4 py-3 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition text-sm font-bold text-[<%= config.color %>] inline-flex items-center justify-center gap-2">
+            <a href="/profile" class="px-4 py-3 rounded-lg border border-[<%= config_global.app.color %>]/30 bg-[<%= config_global.app.color %>]/10 hover:bg-[<%= config_global.app.color %>]/15 transition text-sm font-bold text-[<%= config_global.app.color %>] inline-flex items-center justify-center gap-2">
               <i class="fa-solid fa-user"></i>
               <span><%= t("navbar.profile") %></span>
             </a>
-            <a href="/dashboard" class="px-4 py-3 rounded-lg border border-[<%= config.color %>]/30 bg-[<%= config.color %>]/10 hover:bg-[<%= config.color %>]/15 transition text-sm font-bold text-[<%= config.color %>] inline-flex items-center justify-center gap-2">
+            <a href="/dashboard" class="px-4 py-3 rounded-lg border border-[<%= config_global.app.color %>]/30 bg-[<%= config_global.app.color %>]/10 hover:bg-[<%= config_global.app.color %>]/15 transition text-sm font-bold text-[<%= config_global.app.color %>] inline-flex items-center justify-center gap-2">
               <i class="fa-solid fa-gauge-high"></i>
               <span><%= t("navbar.panel") %></span>
             </a>
@@ -143,13 +143,13 @@
           </div>
         </div>
         <% } else { %>
-        <% if (config_modules.login) { %>
+        <% if (config_global.modules.login) { %>
         <a href="/connexion/auth" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
           <i class="fa-brands fa-discord"></i>
           <span><%= t("navbar.login") %></span>
         </a>
         <% } else { %>
-        <a href="<%= config.link.discord %>" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
+        <a href="<%= config_global.app.link.discord %>" class="cyber-btn w-full px-6 py-4 rounded-lg inline-flex items-center justify-center gap-2">
           <i class="fa-brands fa-discord"></i>
           <span><%= t("navbar.join") %></span>
         </a>
@@ -161,7 +161,7 @@
 </nav>
 
 <script>
-  const SERVER_DOWN = <%= serverDown ? 'true' : 'false' %>;
+  const SERVER_DOWN = <%= status_server ? 'true' : 'false' %>;
   const ONLINE = SERVER_DOWN ? 0 : <%= Number(onlineCount || 0) %>;
 
   /* ===== ONLINE COUNT ===== */

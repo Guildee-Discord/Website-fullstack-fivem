@@ -50,9 +50,6 @@ function postJson(url, payload, { timeoutMs = 7000 } = {}) {
   });
 }
 
-/**
- * Crée un "client webhook" avec queue pour éviter spam / collisions
- */
 function createDiscordWebhookLogger(webhookUrl, { defaultUsername, defaultAvatarUrl } = {}) {
   if (!webhookUrl) throw new Error("webhookUrl manquant");
 
@@ -71,7 +68,7 @@ function createDiscordWebhookLogger(webhookUrl, { defaultUsername, defaultAvatar
         embeds: job.embeds ?? undefined,
         username: job.username ?? defaultUsername,
         avatar_url: job.avatarUrl ?? defaultAvatarUrl,
-        allowed_mentions: job.allowedMentions ?? { parse: [] }, // évite @everyone par défaut
+        allowed_mentions: job.allowedMentions ?? { parse: [] },
       };
 
       try {
@@ -79,7 +76,6 @@ function createDiscordWebhookLogger(webhookUrl, { defaultUsername, defaultAvatar
 
         if (res?.rateLimited) {
           await sleep(res.retryAfterMs || 1000);
-          // on retente une fois
           const retry = await postJson(webhookUrl, payload);
           if (!retry.ok) job.onError?.(retry);
           else job.onOk?.();
@@ -91,7 +87,6 @@ function createDiscordWebhookLogger(webhookUrl, { defaultUsername, defaultAvatar
         job.onError?.({ ok: false, error: e.message });
       }
 
-      // mini pause pour lisser (Discord aime pas les rafales)
       await sleep(150);
     }
 
@@ -113,9 +108,6 @@ function createDiscordWebhookLogger(webhookUrl, { defaultUsername, defaultAvatar
     });
   }
 
-  /**
-   * Helper "log" : niveaux + embed clean
-   */
   function log({ level = "info", title, message, fields = [], footer } = {}) {
     const color =
       level === "success" ? 0x2ecc71 :

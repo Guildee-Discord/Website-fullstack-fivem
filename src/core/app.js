@@ -5,6 +5,7 @@ const path = require("path");
 const toast = require("./toastMiddleware");
 const { configureDiscordAuth } = require("../auth/discord");
 const i18n = require("./../middlewares/i18n");
+const configuration = require('../../configuration/config')
 
 function createApp(ctx) {
   const app = express();
@@ -25,7 +26,7 @@ function createApp(ctx) {
   app.use(express.json());
   app.use(
     session({
-      secret: ctx.config.sessionSecret,
+      secret: configuration.app.sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 },

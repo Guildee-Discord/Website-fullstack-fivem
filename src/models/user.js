@@ -1,21 +1,10 @@
 const { getDb } = require("../db");
 
-/**
- * IMPORTANT:
- * - users.identifier = in-game uniquement (FiveM).
- * - Le site web s'identifie par discord_id.
- * - On NE renvoie PAS id / identifier au front.
- *
- * Pré-requis (dans users):
- * - discord_id VARCHAR(32) NULL
- * - discord_username VARCHAR(100) NULL
- * - discord_avatar VARCHAR(100) NULL
- */
 function toPublicUser(row) {
   if (!row) return null;
   return {
     discord_id: row.discord_id,
-    username: row.discord_username, // on expose "username" côté front
+    username: row.discord_username,
     avatar: row.discord_avatar,
     linked: true,
   };
@@ -72,10 +61,6 @@ async function upsertDiscordProfile(discordProfile) {
   };
 }
 
-/**
- * Lie un compte Discord à un joueur existant via son identifier FiveM.
- * -> UPDATE sur users, on ne touche pas à users.identifier (on l'utilise juste en WHERE).
- */
 async function linkDiscordToIdentifier(discordId, identifier, username, avatar) {
   const db = getDb();
 

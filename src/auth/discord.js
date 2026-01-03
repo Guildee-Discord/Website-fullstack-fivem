@@ -1,6 +1,6 @@
 const DiscordStrategy = require("passport-discord").Strategy;
 const { upsertDiscordProfile, findLinkedUserByDiscordId } = require("../models/user");
-const config_botdiscord = require("../../configuration/bot.json");
+const configuration = require("../../configuration/config");
 
 function configureDiscordAuth(passport, config) {
   passport.serializeUser((user, done) => done(null, user.discord_id));
@@ -22,10 +22,10 @@ function configureDiscordAuth(passport, config) {
   passport.use(
     new DiscordStrategy(
       {
-        clientID: config_botdiscord.discord.clientID,
-        clientSecret: config_botdiscord.discord.clientSecret,
-        callbackURL: config_botdiscord.discord.callbackURL,
-        scope: config_botdiscord.discord.scope,
+        clientID: configuration.bot.clientID,
+        clientSecret: configuration.bot.clientSecret,
+        callbackURL: configuration.bot.callbackURL,
+        scope: configuration.bot.scope,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

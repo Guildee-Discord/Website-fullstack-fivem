@@ -18,7 +18,7 @@ class AppEvents extends EventEmitter {
 
   onEvent(eventName, handler) {
     this.on(eventName, handler);
-    return () => this.off(eventName, handler); // unsubscribe
+    return () => this.off(eventName, handler);
   }
 
   onceEvent(eventName, handler) {

@@ -1,17 +1,14 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const config_website = require("../../../configuration/website.json");
-const config_fivem = require("../../../configuration/fivem.json");
-const config_modules = require("../../../configuration/modules.json");
-const config_page = require("../../../configuration/page.json");
+const configuration = require("../../../configuration/config");
 const { getDiscordClient } = require("../../../src/discord/client");
 
 module.exports = (ctx) => {
   const router = express.Router();
 
   async function getOnlinePlayersCount() {
-    let baseUrl = config_fivem?.fivem?.baseUrl;
+    let baseUrl = configuration.fivem.baseUrl;
     if (!baseUrl) {
       return null;
     }
@@ -32,81 +29,65 @@ module.exports = (ctx) => {
     }
   }
 
-  function safeReadJson(filePath, fallback = []) {
-    try {
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  }
-
   router.get("/", async (req, res) => {
-    const website = config_website.website || {};
-    const themePage = config_page?.theme?.home?.page || "index";
+    const config_global = configuration;
+    const name = (config_global.app.name || "G").trim();
+    const parts = name.split(/\s+/);
+    const global_initial_name = parts.length === 1 ? parts[0][0].toUpperCase() : (parts[0][0] + parts[1][0]).toUpperCase();
+    const themePage = configuration.theme.home.page || "index";
     const viewsDir = path.join(__dirname, "./views");
     const viewPath = path.join(viewsDir, `${themePage}.ejs`);
-    const teamPath = path.join(process.cwd(), "configuration", "team.json");
-    const team = safeReadJson(teamPath, []);
-
-    if (!fs.existsSync(viewPath)) {
-      const errorMessages = [
-        {
-          type: "error",
-          text: `La vue <strong>${themePage}.ejs</strong> est introuvable.`
-        },
-        {
-          type: "cause",
-          text: `Vérifie dans le dossier configuration <strong>→</strong> page.json
-             <strong>→</strong> theme <strong>→</strong> home <strong>→</strong> page.`
-        },
-        {
-          type: "fix",
-          text: `Assure-toi que le fichier existe dans <code>src/modules/home/views/</code>.`
-        }
-      ];
-
-      if (config_modules.modules.logs) {
-        ctx.fileLogs?.info?.(
-          `Vue introuvable ${themePage}.ejs`
-        );
-
-        if (ctx.webhooksReady) {
-          try {
-            const ready = await ctx.webhooksReady;
-            if (ready && ctx.webhooks?.erreur?.send) {
-              await ctx.webhooks.erreur.send({
-                embeds: [
-                  {
-                    description: `La vue \`${themePage}.ejs\` est introuvable`,
-                    color: 0xef4444
-                  }
-                ]
-              });
-            }
-          } catch (e) {
-            const msg = e?.message || (() => { try { return JSON.stringify(e); } catch { return String(e); } })();
-            ctx.logger?.warn?.(`[login] webhook erreur: ${msg}`);
-          }
-        }
-      }
-
-      return res.status(404).render("404", {
-        errorMessages,
-        showDocsButton: false,
-        showHomeButton: false
-      });
-    }
+    const onlineCount = await getOnlinePlayersCount();
 
     try {
-      const name = (website.name || "W").trim();
-      const parts = name.split(/\s+/);
-      const websiteInitial =
-        parts.length === 1
-          ? parts[0][0].toUpperCase()
-          : (parts[0][0] + parts[1][0]).toUpperCase();
-      const onlineCount = await getOnlinePlayersCount();
+      if (!fs.existsSync(viewPath)) {
+        const errorMessages = [
+          {
+            type: "error",
+            text: `La vue <strong>${themePage}.ejs</strong> est introuvable.`
+          },
+          {
+            type: "cause",
+            text: `Vérifie dans le dossier configuration <strong>→</strong> page.json
+             <strong>→</strong> theme <strong>→</strong> home <strong>→</strong> page.`
+          },
+          {
+            type: "fix",
+            text: `Assure-toi que le fichier existe dans <code>src/modules/home/views/</code>.`
+          }
+        ];
+
+        if (configuration.modules.logs) {
+          ctx.fileLogs?.info?.(
+            `Vue introuvable ${themePage}.ejs`
+          );
+
+          if (ctx.webhooksReady) {
+            try {
+              const ready = await ctx.webhooksReady;
+              if (ready && ctx.webhooks?.erreur?.send) {
+                await ctx.webhooks.erreur.send({
+                  embeds: [
+                    {
+                      description: `La vue \`${themePage}.ejs\` est introuvable`,
+                      color: 0xef4444
+                    }
+                  ]
+                });
+              }
+            } catch (e) {
+              const msg = e?.message || (() => { try { return JSON.stringify(e); } catch { return String(e); } })();
+              ctx.logger?.warn?.(`[login] webhook erreur: ${msg}`);
+            }
+          }
+        }
+
+        return res.status(404).render("404", {
+          errorMessages,
+          showDocsButton: false,
+          showHomeButton: false
+        });
+      }
 
       let discordUser = null;
       if (req.user) {
@@ -118,28 +99,17 @@ module.exports = (ctx) => {
         }
       }
 
-      const filePath = path.join(process.cwd(), 'configuration/job.json')
-      const raw = fs.readFileSync(filePath, 'utf-8')
-      const data = JSON.parse(raw)
-      const count = Object.keys(data.job).length
-
       res.render(themePage, {
-        req,
-        team,
-        countJob: count || 0,
-        req,
-        toast: null,
-        serverDown: onlineCount === null || onlineCount === undefined,
-        config_modules: config_modules.modules || {},
-        config: website,
+        config_global: config_global,
+        global_initial_name: global_initial_name,
         user: discordUser,
-        websiteColor: website.color || "#5865f2",
-        websiteInitial,
-        websiteLogo: website.logoUrl || null,
-        requireTos: website.requireTos === true,
+        req: req,
+        toast: null,
         onlineCount: onlineCount ?? 0,
+        status_server: onlineCount === null || onlineCount === undefined,
       });
     } catch (err) {
+      console.log(err)
       const errorMessages = [
         {
           type: "error",
