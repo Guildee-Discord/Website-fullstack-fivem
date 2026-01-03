@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title><%= config?.name || "Undefined" %></title>
-  <% if (websiteLogo) { %>
-  <link rel="icon" type="image/png" href="<%= websiteLogo %>">
-  <meta property="og:image" content="<%= websiteLogo %>">
-  <meta name="twitter:image" content="<%= websiteLogo %>">
+  <title><%= config_global.app.name %></title>
+  <% if (config_global.app.logoUrl) { %>
+  <link rel="icon" type="image/png" href="<%= config_global.app.logoUrl %>">
+  <meta property="og:image" content="<%= config_global.app.logoUrl %>">
+  <meta name="twitter:image" content="<%= config_global.app.logoUrl %>">
   <% } %>
   <script src="https://cdn.tailwindcss.com"></script>
   <%- include(coreView("partials/icons/font-awesome")) %>
@@ -22,7 +22,7 @@
 
   <%- include(coreView("partials/navbar/navbar")) %>
 
-  <section id="jobs" class="py-20 sm:py-28 md:py-32 relative">
+  <section id="jobs" class="pt-24 pb-20 sm:pt-32 sm:pb-28 md:pt-36 md:pb-32 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 md:mb-20">
         <h2 class="text-4xl sm:text-6xl md:text-7xl font-black mb-4 sm:mb-6 cyber-text">MÉTIERS</h2>

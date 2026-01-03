@@ -1,10 +1,8 @@
 const express = require("express");
-const config_website = require("../../../configuration/website.json");
-const config_module = require("../../../configuration/modules.json");
-const config_fivem = require("../../../configuration/fivem.json");
+const configuration = require("../../../configuration/config");
 const { getDiscordClient } = require("../../../src/discord/client");
 const { getAllJobs } = require("../../database/jobs");
-const jobsEmojis = require("../../../configuration/job-emoji.json");
+const jobsEmojis = require("../../../configuration/emoji.json");
 
 function normStr(v) {
   return String(v || "")
@@ -12,7 +10,6 @@ function normStr(v) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 }
-
 
 function pickEmoji(job) {
   const name = normStr(job?.name);
@@ -93,7 +90,7 @@ function pickEmoji(job) {
 }
 
 async function getOnlinePlayersCount() {
-  let baseUrl = config_fivem?.fivem?.baseUrl;
+  let baseUrl = configuration.module_config.fivem.baseUrl;
   if (!baseUrl) return null;
 
   baseUrl = baseUrl.replace(/\/+$/, "");
@@ -112,16 +109,11 @@ async function getOnlinePlayersCount() {
 module.exports = (ctx) => {
   const router = express.Router();
 
-  router.get("/", async (req, res) => {
-    const website = config_website.website || {};
-    const siteName = (website.name || "W").trim();
-    const parts = siteName.split(/\s+/);
-
-    const websiteInitial =
-      parts.length === 1
-        ? (parts[0][0] || "W").toUpperCase()
-        : ((parts[0][0] || "W") + (parts[1][0] || "")).toUpperCase();
-
+  router.get("/jobs", async (req, res) => {
+    const config_global = configuration;
+    const name = (config_global.app.name || "G").trim();
+    const parts = name.split(/\s+/);
+    const global_initial_name = parts.length === 1 ? parts[0][0].toUpperCase() : (parts[0][0] + parts[1][0]).toUpperCase();
     const onlineCount = await getOnlinePlayersCount();
 
     let discordUser = null;
@@ -149,26 +141,18 @@ module.exports = (ctx) => {
     const jobsWithEmojis = (jobs || []).map((job) => ({
       ...job,
       whitelisted: Number(job.whitelisted) === 1,
-      emoji: pickEmoji(job) // ✅ intelligent
+      emoji: pickEmoji(job)
     }));
 
-    console.log(jobsWithEmojis)
-
     return res.render("jobs", {
-      req,
-      toast: null,
       jobs: jobsWithEmojis,
-
-      serverDown: onlineCount === null || onlineCount === undefined,
-      config_modules: config_module.modules || {},
-      config: website,
+      config_global: config_global,
+      global_initial_name: global_initial_name,
       user: discordUser,
-
-      websiteColor: website.color || "#5865f2",
-      websiteInitial,
-      websiteLogo: website.logoUrl || null,
-      requireTos: website.requireTos === true,
-      onlineCount: onlineCount ?? 0
+      req: req,
+      toast: null,
+      onlineCount: onlineCount ?? 0,
+      status_server: onlineCount === null || onlineCount === undefined,
     });
   });
 

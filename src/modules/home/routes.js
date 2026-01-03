@@ -2,13 +2,14 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const configuration = require("../../../configuration/config");
+const { getCheckSystem } = require('../../function/check.crp')
 const { getDiscordClient } = require("../../../src/discord/client");
 
 module.exports = (ctx) => {
   const router = express.Router();
 
   async function getOnlinePlayersCount() {
-    let baseUrl = configuration.fivem.baseUrl;
+    let baseUrl = configuration.module_config.fivem.baseUrl;
     if (!baseUrl) {
       return null;
     }
@@ -38,6 +39,7 @@ module.exports = (ctx) => {
     const viewsDir = path.join(__dirname, "./views");
     const viewPath = path.join(viewsDir, `${themePage}.ejs`);
     const onlineCount = await getOnlinePlayersCount();
+    const checkSystem = await getCheckSystem();
 
     try {
       if (!fs.existsSync(viewPath)) {
@@ -100,6 +102,7 @@ module.exports = (ctx) => {
       }
 
       res.render(themePage, {
+        checkSystem: checkSystem,
         config_global: config_global,
         global_initial_name: global_initial_name,
         user: discordUser,

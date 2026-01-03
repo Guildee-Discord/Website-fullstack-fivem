@@ -1,5 +1,4 @@
 const { checkModuleUpdate } = require("../../function/github");
-const config_modules = require("../../../configuration/modules.json");
 
 module.exports = {
   meta: require("./module.json"),
@@ -7,8 +6,8 @@ module.exports = {
 
   async init(ctx) {
     const router = require("./routes")(ctx);
-    ctx.app.use("/jobs", router);
-
+    ctx.app.use("/fivem", router);
+    
     await checkModuleUpdate({
       logger: ctx.logger,
       meta: module.exports.meta,

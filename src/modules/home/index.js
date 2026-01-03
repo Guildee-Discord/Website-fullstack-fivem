@@ -8,7 +8,6 @@ module.exports = {
     const router = require("./routes")(ctx);
     ctx.app.use("/", router);
     
-
     await checkModuleUpdate({
       logger: ctx.logger,
       meta: module.exports.meta,

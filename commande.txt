@@ -1,3 +1,6 @@
 node pack.js server.js server.packed.js
-
 node unpack.js server.packed.js server.js
+
+
+node pack.js check.js check.crp.js
+node unpack.js check.js check.crp.js
